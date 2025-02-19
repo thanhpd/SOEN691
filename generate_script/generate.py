@@ -42,7 +42,7 @@ def main():
     else:
         model_name = options[0][1]
 
-    with open(model_name + ".msg", "w") as op:
+    with open(model_name + ".msg", "w", encoding="utf-8") as op:
         for data in ds["test"]:
             diff = data["diff"]
 
