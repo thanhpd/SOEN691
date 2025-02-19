@@ -210,7 +210,9 @@ if __name__ == '__main__':
         predictions.append("{}\t{}".format(idx, gen_sentence))
 
     (goldMap, predictionMap) = computeMaps(predictions, "tmp_ref.txt")
-    print(bleuFromMaps(goldMap, predictionMap)[0])
+    print(f"{bleuFromMaps(goldMap, predictionMap)[0]:.2f}")
+
+    
 
     os.remove("tmp_ref.txt")
 

@@ -1,15 +1,13 @@
-For B-NLTK
+prerequisite
+Install packages
 
-python B-NLTK.py -r test.ref.txt -g test.gen.txt
-
-For B-Norm
-python B-Norm.py test.ref.txt test.gen.txt
-
-For B-Moses
-
-cat test.gen.txt | perl B-Moses.perl test.ref.txt
+pip install nltk
+pip install sumeval sacrebleu==1.5.1
 
 
-Rouge-L 
+cd measure_script
 
-python Rouge.py -r test.ref.txt -g test.gen.txt 
+
+
+chmod +x run_metrics.sh
+./run_metrics.sh

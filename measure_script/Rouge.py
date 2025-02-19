@@ -26,6 +26,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if os.path.exists(args.ref_path) and os.path.exists(args.gen_path):
-        print(get_rouge(args.ref_path, args.gen_path))
+        print(f"{get_rouge(args.ref_path, args.gen_path)['ROUGE-L']}")
+
     else:
         print("File not exits")

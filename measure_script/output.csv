@@ -1,0 +1,8 @@
+Filename,B-NLTK,B-Norm,B-Moses,Rouge-L
+chatgpt.msg,7.39 ,11.84 ,2.91 ,0.183 
+commitgen.msg,4.14 ,9.25 ,1.29 ,0.105 
+llama_70b.msg,7.08 ,8.68 ,1.66 ,0.15 
+llama_7b.msg,5.71 ,8.10 ,1.33 ,0.119 
+nmt.msg,3.74 ,9.75 ,1.24 ,0.109 
+nngen.msg,5.17 ,8.92 ,2.93 ,0.104 
+ptrgncmsg.msg,4.79 ,12.65 ,0.81 ,0.16 

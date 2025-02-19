@@ -25,6 +25,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if os.path.exists(args.ref_path) and os.path.exists(args.gen_path):
-        print(get_bleu_nltk(args.ref_path, args.gen_path))
+        bleu_score = get_bleu_nltk(args.ref_path, args.gen_path)
+        print(f"{bleu_score:.2f}")
+
     else:
         print("File not exits")
