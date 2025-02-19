@@ -1,13 +1,4 @@
-prerequisite
-Install packages
-
-pip install nltk
-pip install sumeval sacrebleu==1.5.1
-
-
 cd measure_script
-
-
 
 chmod +x run_metrics.sh
 ./run_metrics.sh
