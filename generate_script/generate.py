@@ -57,8 +57,8 @@ async def main():
             diff = data["diff"]
             prompt = f"""The following is a diff which describes the code changes in a commit, Your task is to write a short commit message accordingly. {diff} According to the diff, the commit message should be:"""
             tasks.append(call_ollama_model(model_name, prompt))
-        if row_count == 1000:
-            break
+        # if row_count == 1000:
+        #     break
     
     results = await asyncio.gather(*tasks)
     with open(filename, "w", encoding="utf-8") as op:
