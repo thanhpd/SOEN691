@@ -1,6 +1,6 @@
 ## Installation
 ```python
-$ pip install requests datasets
+$ pip install ollama datasets
 ```
 
 ### Usage
