@@ -1,6 +1,7 @@
 import getopt, sys
 import requests
 import json
+import os
 
 from datasets import load_dataset
 
@@ -20,7 +21,6 @@ def call_ollama_model(model: str, prompt: str) -> str:
     }
     response = requests.post(OLLAMA_URL, data=json.dumps(payload))
 
-    # Parse and display the response
     try:
         if response.status_code == 200:
             result = response.json()
@@ -32,23 +32,35 @@ def call_ollama_model(model: str, prompt: str) -> str:
 
 
 def main():
-    options, _ = getopt.getopt(sys.argv[1:], "m:", "model=")
+    options, _ = getopt.getopt(sys.argv[1:], "ml:", ["model=", "lang="])
     model_name = ""
-    if len(options) == 0:
+    lang = ""
+    if len(options) != 2:
         print(
-            f"missing --m option \n\nExample Usage: `python generate.py --m=llama3.2:1b`"
+            f"missing/invalid --m or --l options \n\nExample Usage: `python generate.py -m=llama3.2:1b -l=py`",
         )
         return
-    else:
-        model_name = options[0][1]
+    for opt, arg in options:
+        if opt in ("-m", "--model"):
+            model_name = arg
+        elif opt in ("l", "--lang"):
+            lang = arg
+        else:
+            print(
+                f"missing/invalid --m or --l options \n\nExample Usage: `python generate.py -m=llama3.2:1b -l=py`",
+                f"\naccepted programming languages: py, go, js, rb, php, java",
+            )
 
-    with open(model_name + ".msg", "w", encoding="utf-8") as op:
+    filename = f"{lang}/{model_name}.msg"
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+
+    with open(f"{lang}/{model_name}" + ".msg", "w", encoding="utf-8") as op:
         for data in ds["test"]:
-            diff = data["diff"]
-
-            prompt = f"""The following is a diff which describes the code changes in a commit, Your task is to write a short commit message accordingly. {diff} According to the diff, the commit message should be:"""
-            generated_commit_message = call_ollama_model(model_name, prompt)
-            op.write(generated_commit_message + "\n")
+            if data["diff_languages"] == lang:
+                diff = data["diff"]
+                prompt = f"""The following is a diff which describes the code changes in a commit, Your task is to write a short commit message accordingly. {diff} According to the diff, the commit message should be:"""
+                generated_commit_message = call_ollama_model(model_name, prompt)
+                op.write(generated_commit_message + "\n")
 
 
 if __name__ == "__main__":
