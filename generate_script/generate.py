@@ -37,7 +37,7 @@ def main():
     lang = ""
     if len(options) != 2:
         print(
-            f"missing/invalid --m or --l options \n\nExample Usage: `python generate.py -m=llama3.2:1b -l=py`",
+            f"missing/invalid --m or --l options \n\nExample Usage: `python generate.py --model=llama3.2:1b --lang=py`",
         )
         return
     for opt, arg in options:
@@ -47,7 +47,7 @@ def main():
             lang = arg
         else:
             print(
-                f"missing/invalid --m or --l options \n\nExample Usage: `python generate.py -m=llama3.2:1b -l=py`",
+                f"missing/invalid --m or --l options \n\nExample Usage: `python generate.py --model=llama3.2:1b --lang=py`",
                 f"\naccepted programming languages: py, go, js, rb, php, java",
             )
 
