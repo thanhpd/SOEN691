@@ -2,3 +2,13 @@ cd measure_script
 
 chmod +x run_metrics.sh
 ./run_metrics.sh
+
+
+To run BERTScore
+
+git clone https://github.com/Tiiiger/bert_score
+cd bert_score
+pip install .
+
+then run this script for english language
+bert-score -r example/refs.txt -c example/hyps.txt --lang en 
