@@ -7,7 +7,7 @@ import time
 from datasets import load_dataset
 from ollama import AsyncClient
 
-ds = load_dataset("Maxscha/commitbench", split="test", streaming=False)
+ds = load_dataset("Maxscha/commitbench", split="test")
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
 SEED = 42
@@ -64,7 +64,6 @@ async def main():
     with open(filename, "w", encoding="utf-8") as op:
         for _, commit_msg in enumerate(results):
             op.write(commit_msg + "\n")
-            op.flush()
     print(f"processed {row_count} row(s) for {lang}/{model_name} in {time.time() - start_time} seconds")
 
 if __name__ == "__main__":
