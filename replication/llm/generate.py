@@ -75,7 +75,7 @@ def main():
 
             if is_success and len(generated_commit_message) > 0:
                 print(f"{i}: {generated_commit_message}")
-                op.write(f"{i}: {generated_commit_message}\n")
+                op.write(f"{generated_commit_message}\n")
             else:
                 print(f"Failed to generate commit message for {i}th diff")
 
