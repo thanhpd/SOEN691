@@ -1,21 +1,19 @@
 import getopt, sys
-import asyncio
 import json
 import os
 import time
 
 from datasets import load_dataset
-from ollama import AsyncClient
+from ollama import chat
 
-ds = load_dataset("Maxscha/commitbench", split="test")
+ds = load_dataset("Maxscha/commitbench", split="test", streaming=True)
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
 SEED = 42
-client = AsyncClient()
 
 
-async def call_ollama_model(model: str, prompt: str) -> str:
-    response = await client.chat(
+def call_ollama_model(model: str, prompt: str) -> str:
+    response = chat(
         model=model,
         messages=[{"role": "user", "content": prompt}],
         format={"type": "object", "properties": {"message": {"type": "string"}}},
@@ -25,7 +23,7 @@ async def call_ollama_model(model: str, prompt: str) -> str:
     return parsed_response["message"]
 
 
-async def main():
+def main():
     start_time = time.time()
     options, _ = getopt.getopt(sys.argv[1:], "ml:", ["model=", "lang="])
     model_name = ""
@@ -46,25 +44,37 @@ async def main():
                 f"\naccepted programming languages: py, go, js, rb, php, java",
             )
 
-    filename = f"{lang}/{model_name}.msg"
+    sluggified_model_name = model_name.replace(":", "_").replace("/", "_")
+    filename = f"{lang}/{sluggified_model_name}.msg"
+    filename_log = f"output/{sluggified_model_name}.csv"
     os.makedirs(os.path.dirname(filename), exist_ok=True)
+    os.makedirs(os.path.dirname(filename_log), exist_ok=True)
 
     tasks = []
     row_count = 0
-    for _, data in enumerate(ds):
-        row_count += 1
-        if data["diff_languages"] == lang:
-            diff = data["diff"]
-            prompt = f"""The following is a diff which describes the code changes in a commit, Your task is to write a short commit message accordingly. {diff} According to the diff, the commit message should be:"""
-            tasks.append(call_ollama_model(model_name, prompt))
-        # if row_count == 1000:
-        #     break
-    
-    results = await asyncio.gather(*tasks)
-    with open(filename, "w", encoding="utf-8") as op:
-        for _, commit_msg in enumerate(results):
-            op.write(commit_msg + "\n")
-    print(f"processed {row_count} row(s) for {lang}/{model_name} in {time.time() - start_time} seconds")
+    with open(filename, "w", encoding="utf-8") as op, open(
+        filename_log, "w", encoding="utf-8"
+    ) as log:
+        for i, data in enumerate(ds):
+            if data["diff_languages"] == lang:
+                print(f"commit_hash: {data["hash"]}")
+                row_count += 1
+                diff = data["diff"]
+                prompt = f"""The following is a diff which describes the code changes in a commit, Your task is to write a short commit message accordingly. {diff} According to the diff, the commit message should be:"""
+                generated_commit_msg = call_ollama_model(model_name, prompt)
+                # if row_count == 100:
+                #     break
+
+                if generated_commit_msg != "":
+                    op.write(repr(generated_commit_msg)[1:-1] + "\n")
+                    
+                log.write(
+                    f'{i},"{data["hash"]}","' + repr(generated_commit_msg)[1:-1] + '"\n'
+                )
+    print(
+        f"processed {row_count} row(s) for {lang}/{model_name} in {time.time() - start_time} seconds"
+    )
+
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
