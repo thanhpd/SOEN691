@@ -4,35 +4,24 @@ import os
 import time
 import json
 
+from ollama import chat
+
 OLLAMA_URL = "http://localhost:11434/api/generate"
 SEED = 42
 
-
-def call_ollama_model(model: str, prompt: str) -> str:
-    payload = {
-        "model": model,
-        "prompt": prompt,
-        "format": {"type": "object", "properties": {"message": {"type": "string"}}},
-        "stream": False,
-        "options": {"temperature": 0.5, "seed": SEED},
-    }
-
-    # Parse and display the response
+def call_ollama_model2(model: str, prompt: str) -> str:
+    response = chat(
+        model=model,
+        messages=[{"role": "user", "content": prompt}],
+        format={"type": "object", "properties": {"message": {"type": "string"}}},
+        options={"temperature": 0.5, "seed": SEED},
+    )
     try:
-        response = requests.post(OLLAMA_URL, data=json.dumps(payload))
-
-        try:
-            if response.status_code == 200:
-                result = response.json()
-                parsed_response = json.loads(result["response"])
-                return True, response.text, parsed_response["message"]
-            else:
-                return False, response.text, None
-        except Exception as e1:
-            return False, str(e1), None
-
-    except Exception as e2:
-        return False, str(e2), None
+        parsed_response = json.loads(response.message.content)
+        return True, parsed_response["message"]
+    except Exception as e:
+        print(f"err: cannot parse json response: {response}")
+        return False, "err: empty json response"
 
 
 def main():
@@ -71,15 +60,15 @@ def main():
             diff = data["diff"]
 
             prompt = f"""The following is a diff which describes the code changes in a commit, Your task is to write a short commit message accordingly. {diff} According to the diff, the commit message should be:"""
-            is_success, original_response, generated_commit_message = call_ollama_model(model_name, prompt)
+            is_success, response = call_ollama_model2(model_name, prompt)
 
-            if is_success and len(generated_commit_message) > 0:
-                print(f"{i}: {generated_commit_message}")
-                op.write(f"{generated_commit_message}\n")
+            if is_success and len(response) > 0:
+                print(f"{i}: {response}")
+                op.write(f"{repr(response)[1:-1]}\n")
             else:
                 print(f"Failed to generate commit message for {i}th diff")
+                log.write(f"{i},\"{repr(response)[1:-1]}\"\n")
 
-            log.write(f"{i},\"{diff}\",\"{original_response}\"\n")
 
         print(f"processed {row_count} row(s) for {model_name} in {time.time() - start_time} seconds")
 
