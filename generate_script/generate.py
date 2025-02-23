@@ -19,8 +19,12 @@ def call_ollama_model(model: str, prompt: str) -> str:
         format={"type": "object", "properties": {"message": {"type": "string"}}},
         options={"temperature": 0.5, "seed": SEED},
     )
-    parsed_response = json.loads(response.message.content)
-    return parsed_response["message"]
+    try:
+        parsed_response = json.loads(response.message.content)
+        return True, parsed_response["message"]
+    except:
+        print(f"err: cannot parse json response: {response}")
+        return False, "err: empty json response"
 
 
 def main():
@@ -61,15 +65,15 @@ def main():
                 row_count += 1
                 diff = data["diff"]
                 prompt = f"""The following is a diff which describes the code changes in a commit, Your task is to write a short commit message accordingly. {diff} According to the diff, the commit message should be:"""
-                generated_commit_msg = call_ollama_model(model_name, prompt)
+                is_success, response = call_ollama_model(model_name, prompt)
                 # if row_count == 100:
                 #     break
 
-                if generated_commit_msg != "":
-                    op.write(repr(generated_commit_msg)[1:-1] + "\n")
-                    
+                if is_success:
+                    op.write(repr(response)[1:-1] + "\n")
+
                 log.write(
-                    f'{i},"{data["hash"]}","' + repr(generated_commit_msg)[1:-1] + '"\n'
+                    f'{i},"{data["hash"]}","' + repr(response)[1:-1] + '"\n'
                 )
     print(
         f"processed {row_count} row(s) for {lang}/{model_name} in {time.time() - start_time} seconds"
