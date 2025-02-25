@@ -39,8 +39,15 @@ for GEN_FILE in "$GEN_FOLDER"/*; do
         continue
     fi
 
+    # Convert files to UTF-8 before running BERTScore
+    iconv -f "$(file -bi "$GEN_FILE" | sed -n 's/.*charset=//p')" -t UTF-8 "$GEN_FILE" -o "$GEN_FILE.utf8"
+    mv "$GEN_FILE.utf8" "$GEN_FILE"
+
+    iconv -f "$(file -bi "$REF_FILE" | sed -n 's/.*charset=//p')" -t UTF-8 "$REF_FILE" -o "$REF_FILE.utf8"
+    mv "$REF_FILE.utf8" "$REF_FILE"
+
     # Run BERTScore and filter output
-    BERTSCORE_OUTPUT=$(bert-score -r "$REF_FILE" -c "$GEN_FILE" --lang en 2>&1)
+    BERTSCORE_OUTPUT=$(bert-score -r "$REF_FILE" -c "$GEN_FILE" --lang en --rescale-with-baseline 2>&1)
 
     # Extract only Precision, Recall, and F1-score
     P=$(echo "$BERTSCORE_OUTPUT" | grep -oP "(?<=P: )\d+\.\d+")
