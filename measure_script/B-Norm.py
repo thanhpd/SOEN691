@@ -196,7 +196,7 @@ if __name__ == '__main__':
     reference_file_path = sys.argv[1]
     generated_file_path = sys.argv[2]
 
-    with open(reference_file_path, "r") as ref_file, open(generated_file_path, "r") as gen_file:
+    with open(reference_file_path, encoding="utf-8") as ref_file, open(generated_file_path, encoding="utf-8") as gen_file:
         reference_sentences = [line.strip() for line in ref_file.readlines()]
         generated_sentences = [line.strip() for line in gen_file.readlines()]
 

@@ -6,9 +6,7 @@ chmod +x run_metrics.sh
 
 To run BERTScore
 
-git clone https://github.com/Tiiiger/bert_score
-cd bert_score
-pip install .
+chmod +x run_bertscore.sh
+./run_bertscore.sh
 
-then run this script for english language
-bert-score -r example/refs.txt -c example/hyps.txt --lang en 
+After all the steps runs check in the measure_script/bert_sore folder for "bertscore_output.csv" file.

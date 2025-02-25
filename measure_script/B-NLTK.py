@@ -6,8 +6,8 @@ from nltk.translate.bleu_score import SmoothingFunction
 #nltk.download('punkt')
 
 def get_bleu_nltk(ref_path, gen_path):
-    gen_sentence_lst = open(gen_path).read().split("\n")
-    ref_sentence_lst = open(ref_path).read().split("\n")
+    gen_sentence_lst = open(gen_path, encoding="utf-8").read().split("\n")
+    ref_sentence_lst = open(ref_path,encoding="utf-8").read().split("\n")
     sentence_bleu_lst = [sentence_bleu([ref_sentence.split()], gen_sentence.split(), smoothing_function=SmoothingFunction().method5) for ref_sentence, gen_sentence in zip(ref_sentence_lst, gen_sentence_lst)]
     stc_bleu = np.mean(sentence_bleu_lst)
     return stc_bleu*100

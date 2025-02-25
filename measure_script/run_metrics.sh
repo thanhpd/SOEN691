@@ -10,10 +10,7 @@ pip install --upgrade pip
 pip install nltk
 # pip install sumeval sacrebleu==1.5.1
 pip install sumeval sacrebleu==1.3.2
-# brew install pytorch
-# pip install transformers==4.12.0
-# brew install scipy
-pip install bert-score
+
 
 # Define input folder, reference file, and output CSV file
 GEN_FOLDER="generated_msg"  # Folder containing generated filesE
@@ -27,7 +24,7 @@ if [ ! -d "$GEN_FOLDER" ]; then
 fi
 
 # Initialize CSV file with headers
-echo "Filename,B-NLTK,B-Norm,B-Moses,Rouge-L,METEOR,BERTScore" > "$OUTPUT_FILE"
+echo "Filename,B-NLTK,B-Norm,B-Moses,Rouge-L,METEOR" > "$OUTPUT_FILE"
 
 # Function to run a command and capture output
 run_and_capture() {
@@ -51,10 +48,9 @@ for GEN_FILE in "$GEN_FOLDER"/*; do
     MOSES_OUTPUT=$(run_and_capture "$GEN_FILE" bash -c "cat $GEN_FILE | perl B-Moses.perl $REF_FILE")
     ROUGE_OUTPUT=$(run_and_capture "$GEN_FILE" python Rouge.py -r "$REF_FILE" -g "$GEN_FILE")
     METEOR_OUTPUT=$(run_and_capture "$GEN_FILE" python Meteor.py -r "$REF_FILE" -g "$GEN_FILE")
-    BERTSCORE_OUTPUT=$(run_and_capture "$GEN_FILE" python BERTScore.py -r "$REF_FILE" -g "$GEN_FILE")
 
     # Append results to CSV
-    echo "$FILENAME,$NLTK_OUTPUT,$NORM_OUTPUT,$MOSES_OUTPUT,$ROUGE_OUTPUT,$METEOR_OUTPUT,$BERTSCORE_OUTPUT" >> "$OUTPUT_FILE"
+    echo "$FILENAME,$NLTK_OUTPUT,$NORM_OUTPUT,$MOSES_OUTPUT,$ROUGE_OUTPUT,$METEOR_OUTPUT" >> "$OUTPUT_FILE"
 
 done
 
