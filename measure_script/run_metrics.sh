@@ -8,8 +8,8 @@ echo "Setting up the environment..."
 echo "Installing required Python packages..."
 pip install --upgrade pip
 pip install nltk
-# pip install sumeval sacrebleu==1.5.1
-pip install sumeval sacrebleu==1.3.2
+pip install sumeval sacrebleu==1.5.1
+#pip install sumeval sacrebleu==1.3.2
 
 
 # Define input folder, reference file, and output CSV file
