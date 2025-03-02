@@ -12,12 +12,12 @@ EMPTY_RESPONSE_CODE = "ERR::EMPTY_RESPONSE"
 def get_prompt(diff: str) -> str:
     return f"""The following is a diff which describes the code changes in a commit, Your task is to write a short commit message accordingly. {diff} According to the diff, the commit message should be:"""
 
-def call_ollama_model(model: str, prompt: str) -> str:
+def call_ollama_model(model: str, prompt: str, temperature: float) -> str:
     response = chat(
         model=model,
         messages=[{"role": "user", "content": prompt}],
         format={"type": "object", "properties": {"message": {"type": "string"}}},
-        options={"temperature": 0.5, "seed": SEED},
+        options={"temperature": temperature, "seed": SEED},
     )
     try:
         parsed_response = json.loads(response.message.content)
@@ -30,11 +30,11 @@ def call_ollama_model(model: str, prompt: str) -> str:
         print(f"err: cannot parse json response: {response}")
         return False, str(e)
 
-def call_ollama_model2(model: str, prompt: str) -> str:
+def call_ollama_model2(model: str, prompt: str, temperature: float) -> str:
     response = chat(
         model=model,
         messages=[{"role": "user", "content": prompt}],
-        options={"temperature": 0.5, "seed": SEED},
+        options={"temperature": temperature, "seed": SEED},
     )
     try:
         parsed_response = response.message.content
@@ -46,8 +46,9 @@ def call_ollama_model2(model: str, prompt: str) -> str:
 
 def main():
     start_time = time.time()
-    options, _ = getopt.getopt(sys.argv[1:], "m:", "model=")
+    options, _ = getopt.getopt(sys.argv[1:], "", ["model=", "temp="])
     model_name = ""
+    temperature = 0.5
 
     if len(options) == 0:
         print(
@@ -63,6 +64,12 @@ def main():
     for opt, arg in options:
         if opt in ("-m", "--model"):
             model_name = arg
+        elif opt in ("--temp"):
+            try:
+                temperature = float(arg)
+            except ValueError:
+                print("Error: Temperature must be a number.")
+                sys.exit(2)
 
     sluggified_model_name = model_name.replace(":", "_").replace("/", "_")
     filename = f"output/{sluggified_model_name}.json"
@@ -75,13 +82,13 @@ def main():
         n = len(ds)
         row_count = 0
         print(f"""Processing {n} diffs via the model {model_name}""")
-        for i in range(n):
+        for i in range(10):
             row_count += 1
             data = ds[i]
             diff = data["diff"]
 
             prompt = get_prompt(diff)
-            is_success, response = call_ollama_model(model_name, prompt)
+            is_success, response = call_ollama_model(model_name, prompt, temperature)
 
             if is_success and len(response) > 0:
                 print(f"{i}: {response}")
@@ -98,7 +105,7 @@ def main():
 
                 if response == EMPTY_RESPONSE_CODE:
                     # Retry with none
-                    is_retry_success, retry_response = call_ollama_model2(model_name, prompt)
+                    is_retry_success, retry_response = call_ollama_model2(model_name, prompt, temperature)
                     if is_retry_success and len(retry_response) > 0:
                         print(f"{i}: {retry_response}")
                         results.append({
