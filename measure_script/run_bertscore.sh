@@ -39,23 +39,16 @@ for GEN_FILE in "$GEN_FOLDER"/*; do
         continue
     fi
 
-    # Convert files to UTF-8 before running BERTScore
-    iconv -f "$(file -bi "$GEN_FILE" | sed -n 's/.*charset=//p')" -t UTF-8 "$GEN_FILE" -o "$GEN_FILE.utf8"
-    mv "$GEN_FILE.utf8" "$GEN_FILE"
-
-    iconv -f "$(file -bi "$REF_FILE" | sed -n 's/.*charset=//p')" -t UTF-8 "$REF_FILE" -o "$REF_FILE.utf8"
-    mv "$REF_FILE.utf8" "$REF_FILE"
-
     # Run BERTScore and filter output
-    BERTSCORE_OUTPUT=$(bert-score -r "$REF_FILE" -c "$GEN_FILE" --lang en --rescale-with-baseline 2>&1)
+    BERTSCORE_OUTPUT=$(bert-score -r "$REF_FILE" -c "$GEN_FILE" --lang en 2>&1)
 
-    # Extract only Precision, Recall, and F1-score
-    P=$(echo "$BERTSCORE_OUTPUT" | grep -oP "(?<=P: )\d+\.\d+")
-    R=$(echo "$BERTSCORE_OUTPUT" | grep -oP "(?<=R: )\d+\.\d+")
-    F1=$(echo "$BERTSCORE_OUTPUT" | grep -oP "(?<=F1: )\d+\.\d+")
+    # Extract only Precision, Recall, and F1-score using awk
+    P=$(echo "$BERTSCORE_OUTPUT" | awk '/P:/ {print $NF}')
+    R=$(echo "$BERTSCORE_OUTPUT" | awk '/R:/ {print $NF}')
+    F1=$(echo "$BERTSCORE_OUTPUT" | awk '/F1:/ {print $NF}')
 
     # Check if values were extracted correctly
-    if [[ -z "$P" || -z "$R" || -z "$F1" ]]; then
+    if [[ -z "$P" || -z "$R" || -z "$F1" || "$P" == "P:" || "$R" == "R:" || "$F1" == "F1:" ]]; then
         echo "Error extracting scores for $FILENAME. Skipping..."
         continue
     fi
@@ -66,3 +59,6 @@ for GEN_FILE in "$GEN_FOLDER"/*; do
 done
 
 echo "Processing completed. Results saved in $OUTPUT_FILE."
+
+# Keep terminal open
+read -p "Press any key to exit..."

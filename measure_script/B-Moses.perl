@@ -37,6 +37,8 @@ foreach my $stem (@ARGV) {
     &add_to_ref($stem,\@REF) if -e $stem;
 }
 
+
+
 sub add_to_ref {
     my ($file,$REF) = @_;
     my $s=0;
@@ -62,6 +64,7 @@ while(<STDIN>) {
     my $length_translation_this_sentence = scalar(@WORD);
     my ($closest_diff,$closest_length) = (9999,9999);
     foreach my $reference (@{$REF[$s]}) {
+#      print "$s $_ <=> $reference\n";
   $reference = lc($reference) if $lowercase;
 	my @WORD = split(' ',$reference);
 	my $length = scalar(@WORD);
@@ -69,8 +72,11 @@ while(<STDIN>) {
 	if ($diff < $closest_diff) {
 	    $closest_diff = $diff;
 	    $closest_length = $length;
+	    # print STDERR "$s: closest diff ".abs($length_translation_this_sentence-$length)." = abs($length_translation_this_sentence-$length), setting len: $closest_length\n";
 	} elsif ($diff == $closest_diff) {
             $closest_length = $length if $length < $closest_length;
+            # from two references with the same closeness to me
+            # take the *shorter* into account, not the "first" one.
         }
 	for(my $n=1;$n<=4;$n++) {
 	    my %REF_NGRAM_N = ();
@@ -85,6 +91,7 @@ while(<STDIN>) {
 		if (!defined($REF_NGRAM{$ngram}) ||
 		    $REF_NGRAM{$ngram} < $REF_NGRAM_N{$ngram}) {
 		    $REF_NGRAM{$ngram} = $REF_NGRAM_N{$ngram};
+#	    print "$i: REF_NGRAM{$ngram} = $REF_NGRAM{$ngram}<BR>\n";
 		}
 	    }
 	}
@@ -103,52 +110,59 @@ while(<STDIN>) {
 	foreach my $ngram (keys %T_NGRAM) {
 	    $ngram =~ /^(\d+) /;
 	    my $n = $1;
+            # my $corr = 0;
+#	print "$i e $ngram $T_NGRAM{$ngram}<BR>\n";
 	    $TOTAL[$n] += $T_NGRAM{$ngram};
 	    if (defined($REF_NGRAM{$ngram})) {
-		$CORRECT[$n] += ($REF_NGRAM{$ngram} >= $T_NGRAM{$ngram}) ? $T_NGRAM{$ngram} : $REF_NGRAM{$ngram};
+		if ($REF_NGRAM{$ngram} >= $T_NGRAM{$ngram}) {
+		    $CORRECT[$n] += $T_NGRAM{$ngram};
+                    # $corr =  $T_NGRAM{$ngram};
+#	    print "$i e correct1 $T_NGRAM{$ngram}<BR>\n";
+		}
+		else {
+		    $CORRECT[$n] += $REF_NGRAM{$ngram};
+                    # $corr =  $REF_NGRAM{$ngram};
+#	    print "$i e correct2 $REF_NGRAM{$ngram}<BR>\n";
+		}
 	    }
+            # $REF_NGRAM{$ngram} = 0 if !defined $REF_NGRAM{$ngram};
+            # print STDERR "$ngram: {$s, $REF_NGRAM{$ngram}, $T_NGRAM{$ngram}, $corr}\n"
 	}
     }
     $s++;
 }
-
 my $brevity_penalty = 1;
 my $bleu = 0;
+
 my @bleu=();
 
-# Ensure CORRECT and TOTAL are initialized
 for(my $n=1;$n<=4;$n++) {
-  $CORRECT[$n] = 0 unless defined $CORRECT[$n];
-  $TOTAL[$n] = 0 unless defined $TOTAL[$n];
-
-  if ($TOTAL[$n] > 0) {
-    $bleu[$n] = $CORRECT[$n] / $TOTAL[$n];
-  } else {
-    $bleu[$n] = 0;
+  if (defined ($TOTAL[$n])){
+    $bleu[$n]=($TOTAL[$n])?$CORRECT[$n]/$TOTAL[$n]:0;
+    # print STDERR "CORRECT[$n]:$CORRECT[$n] TOTAL[$n]:$TOTAL[$n]\n";
+  }else{
+    $bleu[$n]=0;
   }
 }
 
-if ($length_reference == 0 || $length_translation == 0) {
-  print "BLEU = 0, 0/0/0/0 (BP=0, ratio=0, hyp_len=0, ref_len=0)\n";
+if ($length_reference==0){
+  printf "BLEU = 0, 0/0/0/0 (BP=0, ratio=0, hyp_len=0, ref_len=0)\n";
   exit(1);
 }
 
-if ($length_translation < $length_reference) {
-  $brevity_penalty = exp(1 - $length_reference / $length_translation);
-} else {
-  $brevity_penalty = 1;
+if ($length_translation<$length_reference) {
+  $brevity_penalty = exp(1-$length_reference/$length_translation);
 }
+$bleu = $brevity_penalty * exp((my_log( $bleu[1] ) +
+				my_log( $bleu[2] ) +
+				my_log( $bleu[3] ) +
+				my_log( $bleu[4] ) ) / 4) ;
+printf "%.2f\n",100*$bleu;
 
-$bleu = $brevity_penalty * exp(
-  (my_log($bleu[1]) +
-   my_log($bleu[2]) +
-   my_log($bleu[3]) +
-   my_log($bleu[4])) / 4
-);
 
-printf "%.2f\n", $bleu;
+#print STDERR "It is in-advisable to publish scores from multi-bleu.perl.  The scores depend on your tokenizer, which is unlikely to be reproducible from your paper or consistent across research groups.  Instead you should detokenize then use mteval-v14.pl, which has a standard tokenization.  Scores from multi-bleu.perl can still be used for internal purposes when you have a consistent tokenizer.\n";
 
 sub my_log {
-  return log($_[0]) if $_[0] > 0;
-  return 0;
+  return -9999999999 unless $_[0];
+  return log($_[0]);
 }
