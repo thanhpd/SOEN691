@@ -82,7 +82,7 @@ def main():
         n = len(ds)
         row_count = 0
         print(f"""Processing {n} diffs via the model {model_name}""")
-        for i in range(10):
+        for i in range(n):
             row_count += 1
             data = ds[i]
             diff = data["diff"]
