@@ -66,8 +66,8 @@ def main():
                 diff = data["diff"]
                 prompt = f"""The following is a diff which describes the code changes in a commit, Your task is to write a short commit message accordingly. {diff} According to the diff, the commit message should be:"""
                 is_success, response = call_ollama_model(model_name, prompt)
-                # if row_count == 100:
-                #     break
+                if row_count == 20000:
+                    break
 
                 if is_success:
                     op.write(repr(response)[1:-1] + "\n")
