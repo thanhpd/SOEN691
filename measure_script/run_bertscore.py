@@ -86,5 +86,13 @@ for filename in os.listdir(GEN_FOLDER):
     except subprocess.CalledProcessError as e:
         print(f"Error processing {filename}: {e}")
 
+    
+# Delete the processed_msg folder
+try:
+    shutil.rmtree(GEN_FOLDER)
+    print(f"Successfully deleted '{GEN_FOLDER}' folder.")
+except Exception as e:
+    print(f"Error deleting '{GEN_FOLDER}': {e}")
+
 print(f"Processing completed. Results saved in {OUTPUT_FILE}.")
 input("Press any key to exit...")
