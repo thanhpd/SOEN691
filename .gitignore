@@ -170,3 +170,4 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 *.msg
+measure_script/generated_msg/label.msg
