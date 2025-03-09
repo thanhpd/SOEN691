@@ -3,21 +3,21 @@ import json
 import os
 import time
 
-from datasets import load_dataset
+from datasets import load_dataset, load_from_disk
 from ollama import chat
 
-ds = load_dataset("Maxscha/commitbench", split="test", streaming=True)
+# ds = load_dataset("Maxscha/commitbench", split="test", streaming=True)
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
 SEED = 42
 
 
-def call_ollama_model(model: str, prompt: str) -> str:
+def call_ollama_model(model: str, prompt: str, temp: float) -> str:
     response = chat(
         model=model,
         messages=[{"role": "user", "content": prompt}],
         format={"type": "object", "properties": {"message": {"type": "string"}}},
-        options={"temperature": 0.5, "seed": SEED},
+        options={"temperature": temp, "seed": SEED},
     )
     try:
         parsed_response = json.loads(response.message.content)
@@ -29,10 +29,11 @@ def call_ollama_model(model: str, prompt: str) -> str:
 
 def main():
     start_time = time.time()
-    options, _ = getopt.getopt(sys.argv[1:], "ml:", ["model=", "lang="])
+    options, _ = getopt.getopt(sys.argv[1:], "mlt:", ["model=", "lang=", "temp="])
     model_name = ""
     lang = ""
-    if len(options) != 2:
+    temperature = 0.5
+    if len(options) <= 2:
         print(
             f"missing/invalid --m or --l options \n\nExample Usage: `python generate.py --model=llama3.2:1b --lang=py`",
         )
@@ -42,19 +43,22 @@ def main():
             model_name = arg
         elif opt in ("l", "--lang"):
             lang = arg
+        elif opt in ("t", "--temp"):
+            temperature = float(arg)
         else:
             print(
-                f"missing/invalid --m or --l options \n\nExample Usage: `python generate.py --model=llama3.2:1b --lang=py`",
+                f"missing/invalid --m or --l  options \n\nExample Usage: `python generate.py --model=llama3.2:1b --lang=py --temp=0.5`",
                 f"\naccepted programming languages: py, go, js, rb, php, java",
             )
 
     sluggified_model_name = model_name.replace(":", "_").replace("/", "_")
-    filename = f"{lang}/{sluggified_model_name}.msg"
-    filename_log = f"output/{sluggified_model_name}.csv"
+    filename = f"{lang}/{sluggified_model_name}_{temperature}.msg"
+    filename_log = f"output/{sluggified_model_name}_{temperature}.csv"
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     os.makedirs(os.path.dirname(filename_log), exist_ok=True)
 
-    tasks = []
+    ds = load_from_disk(f"./commitbench_{lang}")
+
     row_count = 0
     with open(filename, "w", encoding="utf-8") as op, open(
         filename_log, "w", encoding="utf-8"
@@ -65,9 +69,9 @@ def main():
                 row_count += 1
                 diff = data["diff"]
                 prompt = f"""The following is a diff which describes the code changes in a commit, Your task is to write a short commit message accordingly. {diff} According to the diff, the commit message should be:"""
-                is_success, response = call_ollama_model(model_name, prompt)
-                if row_count == 20000:
-                    break
+                is_success, response = call_ollama_model(model_name, prompt, temperature)
+                # if row_count == 100:
+                #     break
 
                 if is_success:
                     op.write(repr(response)[1:-1] + "\n")
