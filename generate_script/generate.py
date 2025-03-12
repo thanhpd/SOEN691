@@ -39,7 +39,7 @@ def main():
         )
         return
     for opt, arg in options:
-        if opt in ("-m", "--model"):
+        if opt in ("m", "--model"):
             model_name = arg
         elif opt in ("l", "--lang"):
             lang = arg
@@ -53,8 +53,10 @@ def main():
 
     sluggified_model_name = model_name.replace(":", "_").replace("/", "_")
     filename = f"{lang}/{sluggified_model_name}_{temperature}.msg"
+    label_filename = f"{lang}/label.msg"
     filename_log = f"output/{sluggified_model_name}_{temperature}.csv"
     os.makedirs(os.path.dirname(filename), exist_ok=True)
+    os.makedirs(os.path.dirname(label_filename), exist_ok=True)
     os.makedirs(os.path.dirname(filename_log), exist_ok=True)
 
     ds = load_from_disk(f"./commitbench_{lang}")
@@ -62,7 +64,7 @@ def main():
     row_count = 0
     with open(filename, "w", encoding="utf-8") as op, open(
         filename_log, "w", encoding="utf-8"
-    ) as log:
+    ) as log, open(label_filename, "w", encoding="utf-8") as label:
         for i, data in enumerate(ds):
             if data["diff_languages"] == lang:
                 print(f"commit_hash: {data["hash"]}")
@@ -79,6 +81,7 @@ def main():
                 log.write(
                     f'{i},"{data["hash"]}","' + repr(response)[1:-1] + '"\n'
                 )
+                label.write(repr(data["message"])[1:-1] + "\n")
     print(
         f"processed {row_count} row(s) for {lang}/{model_name} in {time.time() - start_time} seconds"
     )
