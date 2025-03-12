@@ -2,7 +2,7 @@
 from datasets import load_dataset
 
 SPLIT = "train+test"
-N = 20000
+N = 30000
 
 
 # --
