@@ -77,11 +77,11 @@ def main():
 
                 if is_success:
                     op.write(repr(response)[1:-1] + "\n")
+                    label.write(repr(data["message"])[1:-1] + "\n")
 
                 log.write(
                     f'{i},"{data["hash"]}","' + repr(response)[1:-1] + '"\n'
                 )
-                label.write(repr(data["message"])[1:-1] + "\n")
     print(
         f"processed {row_count} row(s) for {lang}/{model_name} in {time.time() - start_time} seconds"
     )
