@@ -52,9 +52,9 @@ def main():
             )
 
     sluggified_model_name = model_name.replace(":", "_").replace("/", "_")
-    filename = f"{lang}/{sluggified_model_name}_{temperature}.msg"
-    label_filename = f"{lang}/label.msg"
-    filename_log = f"output/{sluggified_model_name}_{temperature}.csv"
+    filename = f"{lang}/{sluggified_model_name}/{temperature}/{sluggified_model_name}.msg"
+    label_filename = f"{lang}/{sluggified_model_name}/{temperature}/label.msg"
+    filename_log = f"output/{lang}_{sluggified_model_name}_{temperature}.csv"
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     os.makedirs(os.path.dirname(label_filename), exist_ok=True)
     os.makedirs(os.path.dirname(filename_log), exist_ok=True)
