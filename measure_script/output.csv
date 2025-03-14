@@ -1,2 +1,4 @@
 Filename,B-Moses,B-Norm,B-NLTK,Rouge-L,METEOR
-llama3.2_3b.msg,1.60,8.22,5.49,0.155,0.12
+Processed_msg/rb/codellama_7B/0.0,codellama_7B.msg,,,0.00,,0.00
+Processed_msg/rb/gemma2/0.0,gemma2.msg,1.88,9.22,5.77,0.183,0.14
+Processed_msg/rb/codellama/0.0,codellama.msg,1.17,7.82,5.82,0.156,0.13

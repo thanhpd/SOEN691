@@ -12,8 +12,7 @@ os.system("pip install nltk")
 os.system("pip install sumeval sacrebleu==1.5.1")
 
 # Define input folder, reference file, and output CSV file
-GEN_FOLDER = "processed_msg"
-REF_FILE = os.path.join(GEN_FOLDER, "label.msg")
+GEN_FOLDER = "Processed_msg"
 OUTPUT_FILE = "output.csv"
 
 # Check if the folder exists
@@ -22,7 +21,7 @@ if not os.path.isdir(GEN_FOLDER):
     sys.exit(1)
 
 # Initialize CSV file with headers
-headers = ["Filename", "B-Moses", "B-Norm", "B-NLTK", "Rouge-L", "METEOR"]
+headers = ["Foldername","Filename", "B-Moses", "B-Norm", "B-NLTK", "Rouge-L", "METEOR"]
 with open(OUTPUT_FILE, "w", newline="") as csvfile:
     writer = csv.writer(csvfile)
     writer.writerow(headers)
@@ -36,24 +35,34 @@ def run_and_capture(command):
     except Exception as e:
         return f"Error: {str(e)}"
 
-# Process each file in the folder
-for filename in os.listdir(GEN_FOLDER):
-    if filename == "label.msg":
-        continue  # Skip reference file
-    
-    gen_file = os.path.join(GEN_FOLDER, filename)
-    print(f"Processing {filename}...")
+# Process each folder inside GEN_FOLDER
+for root, dirs, files in os.walk(GEN_FOLDER):
+    for dir_name in dirs:
+        # Skip directories that don't contain the necessary msg files
+        folder_path = os.path.join(root, dir_name)
+        label_file = os.path.join(folder_path, "label.msg")
+        
+        if not os.path.isfile(label_file):
+            continue  # Skip folders without a label.msg file
 
-    # Capture output from each command
-    moses_output = run_and_capture(f"cat {gen_file} | perl B-Moses.perl {REF_FILE}")
-    norm_output = run_and_capture(f"python B-Norm.py {REF_FILE} {gen_file}")
-    nltk_output = run_and_capture(f"python B-NLTK.py -r {REF_FILE} -g {gen_file}")
-    rouge_output = run_and_capture(f"python Rouge.py -r {REF_FILE} -g {gen_file}")
-    meteor_output = run_and_capture(f"python Meteor.py -r {REF_FILE} -g {gen_file}")
-    
-    # Append results to CSV
-    with open(OUTPUT_FILE, "a", newline="") as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow([filename,  moses_output, norm_output,nltk_output, rouge_output, meteor_output])
+        # Process each generated msg file (excluding label.msg)
+        for filename in os.listdir(folder_path):
+            if filename == "label.msg":
+                continue  # Skip reference file
+
+            gen_file = os.path.join(folder_path, filename)
+            print(f"Processing {filename} in {folder_path}...")
+
+            # Capture output from each command
+            moses_output = run_and_capture(f"cat {gen_file} | perl B-Moses.perl {label_file}")
+            norm_output = run_and_capture(f"python B-Norm.py {label_file} {gen_file}")
+            nltk_output = run_and_capture(f"python B-NLTK.py -r {label_file} -g {gen_file}")
+            rouge_output = run_and_capture(f"python Rouge.py -r {label_file} -g {gen_file}")
+            meteor_output = run_and_capture(f"python Meteor.py -r {label_file} -g {gen_file}")
+            
+            # Append results to CSV
+            with open(OUTPUT_FILE, "a", newline="") as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerow([folder_path,filename, moses_output, norm_output, nltk_output, rouge_output, meteor_output])
 
 print(f"Processing completed. Results saved in {OUTPUT_FILE}.")
