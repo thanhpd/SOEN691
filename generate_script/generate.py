@@ -4,26 +4,30 @@ import os
 import time
 
 from datasets import load_dataset, load_from_disk
-from ollama import chat
+from ollama import Client
 
 # ds = load_dataset("Maxscha/commitbench", split="test", streaming=True)
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
 SEED = 42
 
+client = Client(
+    host="http://localhost:11434",
+)
+
 
 def call_ollama_model(model: str, prompt: str, temp: float) -> str:
-    response = chat(
-        model=model,
-        messages=[{"role": "user", "content": prompt}],
-        format={"type": "object", "properties": {"message": {"type": "string"}}},
-        options={"temperature": temp, "seed": SEED},
-    )
     try:
+        response = client.chat(
+            model=model,
+            messages=[{"role": "user", "content": prompt}],
+            format={"type": "object", "properties": {"message": {"type": "string"}}},
+            options={"temperature": temp, "seed": SEED},
+        )
         parsed_response = json.loads(response.message.content)
         return True, parsed_response["message"]
     except:
-        print(f"err: cannot parse json response: {response}")
+        print(f"err: cannot parse empty json response", flush=True)
         return False, "err: empty json response"
 
 
@@ -52,7 +56,9 @@ def main():
             )
 
     sluggified_model_name = model_name.replace(":", "_").replace("/", "_")
-    filename = f"{lang}/{sluggified_model_name}/{temperature}/{sluggified_model_name}.msg"
+    filename = (
+        f"{lang}/{sluggified_model_name}/{temperature}/{sluggified_model_name}.msg"
+    )
     label_filename = f"{lang}/{sluggified_model_name}/{temperature}/label.msg"
     filename_log = f"output/{lang}_{sluggified_model_name}_{temperature}.csv"
     os.makedirs(os.path.dirname(filename), exist_ok=True)
@@ -67,23 +73,24 @@ def main():
     ) as log, open(label_filename, "w", encoding="utf-8") as label:
         for i, data in enumerate(ds):
             if data["diff_languages"] == lang:
-                print(f"commit_hash: {data["hash"]}")
-                row_count += 1
+                print(f"commit_hash: {data["hash"]}", flush=True)
                 diff = data["diff"]
                 prompt = f"""The following is a diff which describes the code changes in a commit, Your task is to write a short commit message accordingly. {diff} According to the diff, the commit message should be:"""
-                is_success, response = call_ollama_model(model_name, prompt, temperature)
-                # if row_count == 100:
-                #     break
+                is_success, response = call_ollama_model(
+                    model_name, prompt, temperature
+                )
 
                 if is_success:
+                    row_count += 1
                     op.write(repr(response)[1:-1] + "\n")
                     label.write(repr(data["message"])[1:-1] + "\n")
 
-                log.write(
-                    f'{i},"{data["hash"]}","' + repr(response)[1:-1] + '"\n'
-                )
+                log.write(f'{i},"{data["hash"]}","' + repr(response)[1:-1] + '"\n')
+                if row_count == 20001:
+                    break
     print(
-        f"processed {row_count} row(s) for {lang}/{model_name} in {time.time() - start_time} seconds"
+        f"processed {row_count} row(s) for {lang}/{model_name} in {time.time() - start_time} seconds",
+        flush=True,
     )
 
 
