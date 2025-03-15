@@ -1,0 +1,86 @@
+import os
+import subprocess
+import csv
+import sys
+
+print("Setting up the environment...")
+
+# Install required Python packages
+print("Installing required Python packages...")
+os.system("pip install --upgrade pip")
+os.system("pip install nltk")
+os.system("pip install sumeval sacrebleu==1.5.1")
+
+# Define input folder, reference file, and output CSV file
+GEN_FOLDER = "Processed_msg"
+OUTPUT_FILE = "output_lines.csv"
+
+# Check if the folder exists
+if not os.path.isdir(GEN_FOLDER):
+    print(f"Error: Folder '{GEN_FOLDER}' not found!")
+    sys.exit(1)
+
+# Initialize CSV file with headers
+headers = ["Foldername",  "Line Number",  "B-Moses", "B-Norm", "B-NLTK", "Rouge-L", "METEOR"]
+with open(OUTPUT_FILE, "w", newline="") as csvfile:
+    writer = csv.writer(csvfile)
+    writer.writerow(headers)
+
+def run_and_capture(command):
+    """Runs a command and captures its output."""
+    try:
+        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        output = result.stdout.strip().replace("\n", " ").replace(",", " ")
+        return output
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+# Process each folder inside GEN_FOLDER
+for root, dirs, files in os.walk(GEN_FOLDER):
+    for dir_name in dirs:
+        # Skip directories that don't contain the necessary msg files
+        folder_path = os.path.join(root, dir_name)
+        label_file = os.path.join(folder_path, "label.msg")
+        
+        if not os.path.isfile(label_file):
+            continue  # Skip folders without a label.msg file
+
+        # Process each generated msg file (excluding label.msg)
+        for filename in os.listdir(folder_path):
+            if filename == "label.msg":
+                continue  # Skip reference file
+
+            gen_file = os.path.join(folder_path, filename)
+            print(f"Processing {filename} in {folder_path}...")
+
+            # Read the label and generated files line by line
+            with open(label_file, 'r') as label_f, open(gen_file, 'r') as gen_f:
+                for line_number, (label_line, gen_line) in enumerate(zip(label_f, gen_f), start=1):
+                    # Print the current line number and the lines being compared for debugging
+                    print(f"Processing line {line_number}: Label Line: {label_line.strip()} Generated Line: {gen_line.strip()}")
+
+                    # Create temporary files for the current line
+                    temp_label_path = "temp_label.msg"
+                    temp_gen_path = "temp_gen.msg"
+
+                    with open(temp_label_path, 'w') as temp_label, open(temp_gen_path, 'w') as temp_gen:
+                        temp_label.write(label_line)
+                        temp_gen.write(gen_line)
+
+                    # Capture output from each command using the temp files
+                    moses_output = run_and_capture(f"cat {temp_gen_path} | perl B-Moses.perl {temp_label_path}")
+                    norm_output = run_and_capture(f"python B-Norm.py {temp_label_path} {temp_gen_path}")
+                    nltk_output = run_and_capture(f"python B-NLTK.py -r {temp_label_path} -g {temp_gen_path}")
+                    rouge_output = run_and_capture(f"python Rouge.py -r {temp_label_path} -g {temp_gen_path}")
+                    meteor_output = run_and_capture(f"python Meteor.py -r {temp_label_path} -g {temp_gen_path}")
+
+                    # Append results to CSV with line number and corresponding lines
+                    with open(OUTPUT_FILE, "a", newline="") as csvfile:
+                        writer = csv.writer(csvfile)
+                        writer.writerow([folder_path,  line_number,  moses_output, norm_output, nltk_output, rouge_output, meteor_output])
+
+                    # Clean up the temporary files
+                    os.remove(temp_label_path)
+                    os.remove(temp_gen_path)
+
+print(f"Processing completed. Results saved in {OUTPUT_FILE}.")

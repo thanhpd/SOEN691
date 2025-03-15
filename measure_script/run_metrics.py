@@ -21,7 +21,7 @@ if not os.path.isdir(GEN_FOLDER):
     sys.exit(1)
 
 # Initialize CSV file with headers
-headers = ["Foldername","Filename", "B-Moses", "B-Norm", "B-NLTK", "Rouge-L", "METEOR"]
+headers = ["Foldername","B-Moses", "B-Norm", "B-NLTK", "Rouge-L", "METEOR"]
 with open(OUTPUT_FILE, "w", newline="") as csvfile:
     writer = csv.writer(csvfile)
     writer.writerow(headers)
@@ -63,6 +63,6 @@ for root, dirs, files in os.walk(GEN_FOLDER):
             # Append results to CSV
             with open(OUTPUT_FILE, "a", newline="") as csvfile:
                 writer = csv.writer(csvfile)
-                writer.writerow([folder_path,filename, moses_output, norm_output, nltk_output, rouge_output, meteor_output])
+                writer.writerow([folder_path, moses_output, norm_output, nltk_output, rouge_output, meteor_output])
 
 print(f"Processing completed. Results saved in {OUTPUT_FILE}.")

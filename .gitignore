@@ -175,3 +175,7 @@ measure_script/generated_msg/label.msg
 measure_script/output.csv
 measure_script/Output_csv/output.csv
 measure_script/bert_score/
+/measure_script/generated_msg
+measure_script/output.csv
+measure_script/output_lines.csv
+measure_script/output.csv
