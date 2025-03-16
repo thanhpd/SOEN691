@@ -27,7 +27,7 @@ def call_ollama_model(model: str, prompt: str, temp: float) -> str:
         parsed_response = json.loads(response.message.content)
         return True, parsed_response["message"]
     except:
-        print(f"err: cannot parse empty json response", flush=True)
+        print("err: cannot parse empty json response", flush=True)
         return False, "err: empty json response"
 
 
@@ -85,7 +85,7 @@ def main():
                     op.write(repr(response)[1:-1] + "\n")
                     label.write(repr(data["message"])[1:-1] + "\n")
 
-                log.write(f'{i},"{data["hash"]}","' + repr(response)[1:-1] + '"\n')
+                log.write(f'{i},"{data["hash"]}","' + repr(response)[1:-1] + f',{data["project"]}'+'"\n')
                 if row_count == 20001:
                     break
     print(
