@@ -3,7 +3,7 @@
 git clone https://github.com/thanhpd/SOEN691
 
 # 1. Install Ollama
-curl -fsSL https://ollama.com/install.sh | sh
+curl -fsSL https://ollama.com/install.sh | OLLAMA_VERSION=0.6.0 sh
 
 # 2. Install Miniconda + Python env
 mkdir -p ~/miniconda3
