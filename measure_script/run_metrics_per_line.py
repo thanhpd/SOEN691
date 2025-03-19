@@ -21,15 +21,15 @@ if not os.path.isdir(GEN_FOLDER):
     sys.exit(1)
 
 # Initialize CSV file with headers
-headers = ["Foldername",  "Line Number",  "B-Moses", "B-Norm", "B-NLTK", "Rouge-L", "METEOR"]
+headers = ["Foldername", "Line Number", "B-Moses", "B-Norm", "B-NLTK", "Rouge-L", "METEOR"]
 with open(OUTPUT_FILE, "w", newline="") as csvfile:
     writer = csv.writer(csvfile)
     writer.writerow(headers)
 
-def run_and_capture(command):
+def run_and_capture(command, input_data=None):
     """Runs a command and captures its output."""
     try:
-        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        result = subprocess.run(command, input=input_data, shell=True, capture_output=True, text=True)
         output = result.stdout.strip().replace("\n", " ").replace(",", " ")
         return output
     except Exception as e:
@@ -41,7 +41,7 @@ for root, dirs, files in os.walk(GEN_FOLDER):
         # Skip directories that don't contain the necessary msg files
         folder_path = os.path.join(root, dir_name)
         label_file = os.path.join(folder_path, "label.msg")
-        
+
         if not os.path.isfile(label_file):
             continue  # Skip folders without a label.msg file
 
@@ -59,28 +59,27 @@ for root, dirs, files in os.walk(GEN_FOLDER):
                     # Print the current line number and the lines being compared for debugging
                     print(f"Processing line {line_number}: Label Line: {label_line.strip()} Generated Line: {gen_line.strip()}")
 
-                    # Create temporary files for the current line
-                    temp_label_path = "temp_label.msg"
-                    temp_gen_path = "temp_gen.msg"
+                    # Capture output from each command using the lines directly
+                    moses_command = f"echo \"{label_line.strip()}\" | perl B-Moses_per_line.perl -lc \"{gen_line.strip()}\""
+                    moses_output = run_and_capture(moses_command)
+                    
+                    norm_command = f"python B-Norm_per_line.py --refs \"{label_line.strip()}\" --gen \"{gen_line.strip()}\""
 
-                    with open(temp_label_path, 'w') as temp_label, open(temp_gen_path, 'w') as temp_gen:
-                        temp_label.write(label_line)
-                        temp_gen.write(gen_line)
-
-                    # Capture output from each command using the temp files
-                    moses_output = run_and_capture(f"cat {temp_gen_path} | perl B-Moses.perl {temp_label_path}")
-                    norm_output = run_and_capture(f"python B-Norm.py {temp_label_path} {temp_gen_path}")
-                    nltk_output = run_and_capture(f"python B-NLTK.py -r {temp_label_path} -g {temp_gen_path}")
-                    rouge_output = run_and_capture(f"python Rouge.py -r {temp_label_path} -g {temp_gen_path}")
-                    meteor_output = run_and_capture(f"python Meteor.py -r {temp_label_path} -g {temp_gen_path}")
+                    # Run the command and capture the output
+                    norm_output = run_and_capture(norm_command)
+                    
+                    nltk_command = f"python B-NLTK_per_line.py --ref \"{label_line.strip()}\" --gen \"{gen_line.strip()}\""
+                    nltk_output = run_and_capture(nltk_command)
+                    
+                    rouge_command =  f"python Rouge_per_line.py --ref \"{label_line.strip()}\" --gen \"{gen_line.strip()}\""
+                    rouge_output = run_and_capture(rouge_command)
+                    
+                    meteor_command = f"python Meteor_per_line.py --ref \"{label_line.strip()}\" --gen \"{gen_line.strip()}\""
+                    meteor_output = run_and_capture(meteor_command)
 
                     # Append results to CSV with line number and corresponding lines
                     with open(OUTPUT_FILE, "a", newline="") as csvfile:
                         writer = csv.writer(csvfile)
-                        writer.writerow([folder_path,  line_number,  moses_output, norm_output, nltk_output, rouge_output, meteor_output])
-
-                    # Clean up the temporary files
-                    os.remove(temp_label_path)
-                    os.remove(temp_gen_path)
+                        writer.writerow([folder_path, line_number, moses_output, norm_output, nltk_output, rouge_output, meteor_output])
 
 print(f"Processing completed. Results saved in {OUTPUT_FILE}.")

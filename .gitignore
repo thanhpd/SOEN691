@@ -179,3 +179,5 @@ measure_script/bert_score/
 measure_script/output.csv
 measure_script/output_lines.csv
 measure_script/output.csv
+measure_script/output.csv
+measure_script/tmp_ref.txt

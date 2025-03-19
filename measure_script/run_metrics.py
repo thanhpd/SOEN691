@@ -7,12 +7,14 @@ print("Setting up the environment...")
 
 # Install required Python packages
 print("Installing required Python packages...")
+# os.system("python3 -m pip install numpy")
 os.system("pip install --upgrade pip")
 os.system("pip install nltk")
 os.system("pip install sumeval sacrebleu==1.5.1")
 
-# Define input folder, reference file, and output CSV file
-GEN_FOLDER = "Processed_msg"
+# Define input folder, refe
+# rence file, and output CSV file
+GEN_FOLDER = "processed_msg"
 OUTPUT_FILE = "output.csv"
 
 # Check if the folder exists
@@ -29,8 +31,11 @@ with open(OUTPUT_FILE, "w", newline="") as csvfile:
 def run_and_capture(command):
     """Runs a command and captures its output."""
     try:
-        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        result = subprocess.run(command, shell=True, capture_output=True, text=True, executable="/bin/bash")
         output = result.stdout.strip().replace("\n", " ").replace(",", " ")
+        if result.returncode != 0:
+            print(f"Error running command: {command}")
+            print(f"Error message: {result.stderr}")
         return output
     except Exception as e:
         return f"Error: {str(e)}"
@@ -53,12 +58,12 @@ for root, dirs, files in os.walk(GEN_FOLDER):
             gen_file = os.path.join(folder_path, filename)
             print(f"Processing {filename} in {folder_path}...")
 
-            # Capture output from each command
-            moses_output = run_and_capture(f"cat {gen_file} | perl B-Moses.perl {label_file}")
-            norm_output = run_and_capture(f"python B-Norm.py {label_file} {gen_file}")
-            nltk_output = run_and_capture(f"python B-NLTK.py -r {label_file} -g {gen_file}")
-            rouge_output = run_and_capture(f"python Rouge.py -r {label_file} -g {gen_file}")
-            meteor_output = run_and_capture(f"python Meteor.py -r {label_file} -g {gen_file}")
+            # Ensure Python scripts are run with explicit interpreter
+            moses_output = run_and_capture(f"perl B-Moses.perl {label_file} < {gen_file}")
+            norm_output = run_and_capture(f"python3 B-Norm.py {label_file} {gen_file}")
+            nltk_output = run_and_capture(f"python3 B-NLTK.py -r {label_file} -g {gen_file}")
+            rouge_output = run_and_capture(f"python3 Rouge.py -r {label_file} -g {gen_file}")
+            meteor_output = run_and_capture(f"python3 Meteor.py -r {label_file} -g {gen_file}")
             
             # Append results to CSV
             with open(OUTPUT_FILE, "a", newline="") as csvfile:
