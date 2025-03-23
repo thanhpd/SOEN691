@@ -4,51 +4,36 @@ import csv
 import sys
 import bert_score  # Importing bert_score
 
-<<<<<<< Updated upstream
-# Define paths
-GEN_FOLDER = "processed_msg"
-OUTPUT_FILE = "bertscore_output.csv"
-BERT_SCORE_REPO = "https://github.com/Tiiiger/bert_score"
-BERT_SCORE_DIR = "bert_score"
-
-# Setup Environment
-=======
->>>>>>> Stashed changes
 print("Setting up the environment...")
 os.system("pip install bert-score")  # Install bert-score
 
 # Define input folder, reference file, and output CSV file
 GEN_FOLDER = "generated_msg"
-OUTPUT_FILE = "output_bert.csv"
+OUTPUT_FILE = "output_bert_per_line.csv"
 
 # Check if the folder exists
 if not os.path.isdir(GEN_FOLDER):
     print(f"Error: Folder '{GEN_FOLDER}' not found!")
-<<<<<<< Updated upstream
-    exit(1)
-
-DEST_FOLDER = os.path.join("bert_score", "processed_msg")
-
-# Ensure destination folder exists
-os.makedirs(DEST_FOLDER, exist_ok=True)
-
-# Copy the folder
-try:
-    shutil.copytree(GEN_FOLDER, DEST_FOLDER, dirs_exist_ok=True)
-    print(f"Successfully copied '{GEN_FOLDER}' to '{DEST_FOLDER}'")
-except Exception as e:
-    print(f"Error copying folder: {e}")
-
-os.chdir(BERT_SCORE_DIR)
-=======
     sys.exit(1)
->>>>>>> Stashed changes
 
 # Initialize CSV file with headers
-headers = ["Foldername", "BERTScore Precision (Mean)", "BERTScore Recall (Mean)", "BERTScore F1 (Mean)"]
+headers = ["Foldername", "BERTScore Precision", "BERTScore Recall", "BERTScore F1"]
 with open(OUTPUT_FILE, "w", newline="") as csvfile:
     writer = csv.writer(csvfile)
     writer.writerow(headers)
+
+# Function to run commands and capture output
+def run_and_capture(command):
+    """Runs a command and captures its output."""
+    try:
+        result = subprocess.run(command, shell=True, capture_output=True, text=True, executable="/bin/bash")
+        output = result.stdout.strip().replace("\n", " ").replace(",", " ")
+        if result.returncode != 0:
+            print(f"Error running command: {command}")
+            print(f"Error message: {result.stderr}")
+        return output
+    except Exception as e:
+        return f"Error: {str(e)}"
 
 # Initialize BERTScore scorer without rescaling with baseline
 scorer = bert_score.BERTScorer(lang='en', rescale_with_baseline=False)
@@ -59,14 +44,9 @@ for root, dirs, files in os.walk(GEN_FOLDER):
         # Skip directories that don't contain the necessary msg files
         folder_path = os.path.join(root, dir_name)
         label_file = os.path.join(folder_path, "label.msg")
-
+        
         if not os.path.isfile(label_file):
             continue  # Skip folders without a label.msg file
-
-        # Initialize lists to store per-line BERTScores
-        all_precisions = []
-        all_recalls = []
-        all_f1s = []
 
         # Process each generated msg file (excluding label.msg)
         for filename in os.listdir(folder_path):
@@ -93,20 +73,9 @@ for root, dirs, files in os.walk(GEN_FOLDER):
                 # Compute BERTScore for each line
                 P, R, F1 = scorer.score([gen_line], [ref_line])  # Single sentence comparison
                 
-                # Append the BERTScore values to the lists
-                all_precisions.append(P.item())
-                all_recalls.append(R.item())
-                all_f1s.append(F1.item())
-
-        # If we have processed any lines, compute and save the mean BERTScore for the entire file
-        if all_precisions:
-            mean_precision = sum(all_precisions) / len(all_precisions)
-            mean_recall = sum(all_recalls) / len(all_recalls)
-            mean_f1 = sum(all_f1s) / len(all_f1s)
-
-            # Append the mean results to CSV
-            with open(OUTPUT_FILE, "a", newline="") as csvfile:
-                writer = csv.writer(csvfile)
-                writer.writerow([folder_path, round(mean_precision, 2), round(mean_recall, 2), round(mean_f1, 2)])
+                # Append results to CSV
+                with open(OUTPUT_FILE, "a", newline="") as csvfile:
+                    writer = csv.writer(csvfile)
+                    writer.writerow([folder_path, round(P.item(), 2), round(R.item(), 2), round(F1.item(), 2)])
 
 print(f"Processing completed. Results saved in {OUTPUT_FILE}.")
