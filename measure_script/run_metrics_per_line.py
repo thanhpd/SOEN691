@@ -9,7 +9,6 @@ print("Setting up the environment...")
 print("Installing required Python packages...")
 os.system("pip install --upgrade pip")
 os.system("pip install nltk")
-os.system("pip install numpy")
 os.system("pip install sumeval sacrebleu==1.5.1")
 
 # Define input folder, reference file, and output CSV file
@@ -54,8 +53,8 @@ for root, dirs, files in os.walk(GEN_FOLDER):
             gen_file = os.path.join(folder_path, filename)
             print(f"Processing {filename} in {folder_path}...")
 
-            # Read the label and generated files line by line
-            with open(label_file, 'r') as label_f, open(gen_file, 'r') as gen_f:
+            # Read the label and generated files line by line with utf-8 encoding
+            with open(label_file, 'r', encoding="utf-8") as label_f, open(gen_file, 'r', encoding="utf-8") as gen_f:
                 for line_number, (label_line, gen_line) in enumerate(zip(label_f, gen_f), start=1):
                     # Print the current line number and the lines being compared for debugging
                     print(f"Processing line {line_number}: Label Line: {label_line.strip()} Generated Line: {gen_line.strip()}")
