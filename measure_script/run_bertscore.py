@@ -4,16 +4,6 @@ import csv
 import sys
 import bert_score  # Importing bert_score
 
-<<<<<<< Updated upstream
-# Define paths
-GEN_FOLDER = "processed_msg"
-OUTPUT_FILE = "bertscore_output.csv"
-BERT_SCORE_REPO = "https://github.com/Tiiiger/bert_score"
-BERT_SCORE_DIR = "bert_score"
-
-# Setup Environment
-=======
->>>>>>> Stashed changes
 print("Setting up the environment...")
 os.system("pip install bert-score")  # Install bert-score
 
@@ -24,25 +14,7 @@ OUTPUT_FILE = "output_bert.csv"
 # Check if the folder exists
 if not os.path.isdir(GEN_FOLDER):
     print(f"Error: Folder '{GEN_FOLDER}' not found!")
-<<<<<<< Updated upstream
-    exit(1)
-
-DEST_FOLDER = os.path.join("bert_score", "processed_msg")
-
-# Ensure destination folder exists
-os.makedirs(DEST_FOLDER, exist_ok=True)
-
-# Copy the folder
-try:
-    shutil.copytree(GEN_FOLDER, DEST_FOLDER, dirs_exist_ok=True)
-    print(f"Successfully copied '{GEN_FOLDER}' to '{DEST_FOLDER}'")
-except Exception as e:
-    print(f"Error copying folder: {e}")
-
-os.chdir(BERT_SCORE_DIR)
-=======
     sys.exit(1)
->>>>>>> Stashed changes
 
 # Initialize CSV file with headers
 headers = ["Foldername", "BERTScore Precision (Mean)", "BERTScore Recall (Mean)", "BERTScore F1 (Mean)"]
@@ -59,7 +31,7 @@ for root, dirs, files in os.walk(GEN_FOLDER):
         # Skip directories that don't contain the necessary msg files
         folder_path = os.path.join(root, dir_name)
         label_file = os.path.join(folder_path, "label.msg")
-
+        
         if not os.path.isfile(label_file):
             continue  # Skip folders without a label.msg file
 
