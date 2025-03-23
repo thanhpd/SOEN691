@@ -26,7 +26,7 @@ if not os.path.isdir(GEN_FOLDER):
     print(f"Error: Folder '{GEN_FOLDER}' not found!")
     exit(1)
 
-DEST_FOLDER = os.path.join("bert_score", "Processed_msg")
+DEST_FOLDER = os.path.join("bert_score", "processed_msg")
 
 # Ensure destination folder exists
 os.makedirs(DEST_FOLDER, exist_ok=True)
@@ -51,7 +51,7 @@ for root, dirs, files in os.walk(GEN_FOLDER):
         # Skip directories that don't contain the necessary msg files
         folder_path = os.path.join(root, dir_name)
         label_file = os.path.join(folder_path, "label.msg")
-        
+
         if not os.path.isfile(label_file):
             continue  # Skip folders without a label.msg file
 
