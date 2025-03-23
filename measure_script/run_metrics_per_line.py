@@ -9,10 +9,11 @@ print("Setting up the environment...")
 print("Installing required Python packages...")
 os.system("pip install --upgrade pip")
 os.system("pip install nltk")
+os.system("pip install numpy")
 os.system("pip install sumeval sacrebleu==1.5.1")
 
 # Define input folder, reference file, and output CSV file
-GEN_FOLDER = "Processed_msg"
+GEN_FOLDER = "processed_msg"
 OUTPUT_FILE = "output_lines.csv"
 
 # Check if the folder exists
