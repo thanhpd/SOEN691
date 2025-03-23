@@ -5,7 +5,7 @@ import shutil
 import re
 
 # Define paths
-GEN_FOLDER = "Processed_msg"
+GEN_FOLDER = "processed_msg"
 OUTPUT_FILE = "bertscore_output.csv"
 BERT_SCORE_REPO = "https://github.com/Tiiiger/bert_score"
 BERT_SCORE_DIR = "bert_score"
