@@ -27,12 +27,15 @@ with open(OUTPUT_FILE, "w", newline="") as csvfile:
     writer = csv.writer(csvfile)
     writer.writerow(headers)
 
-def run_and_capture(command, input_data=None):
-    """Runs a command and captures its output."""
+def run_and_capture(command, input_data=None, timeout=60):
+    """Runs a command and captures its output, skipping if it exceeds the timeout."""
     try:
-        result = subprocess.run(command, input=input_data, shell=True, capture_output=True, text=True)
+        result = subprocess.run(command, input=input_data, shell=True, capture_output=True, text=True, timeout=timeout)
         output = result.stdout.strip().replace("\n", " ").replace(",", " ")
         return output
+    except subprocess.TimeoutExpired:
+        print(f"Skipping command due to timeout: {command}")
+        return "0"  # Default value for timeout cases
     except Exception as e:
         return f"Error: {str(e)}"
 
@@ -57,18 +60,13 @@ for root, dirs, files in os.walk(GEN_FOLDER):
             # Read the label and generated files line by line with utf-8 encoding
             with open(label_file, 'r', encoding="utf-8") as label_f, open(gen_file, 'r', encoding="utf-8") as gen_f:
                 for line_number, (label_line, gen_line) in enumerate(zip(label_f, gen_f), start=1):
-                    # Print the current line number and the lines being compared for debugging
-                    print(f"Processing line {line_number}: Label Line: {label_line.strip()} Generated Line: {gen_line.strip()}")
-
                     # Capture output from each command using the lines directly
                     moses_command = f"echo \"{label_line.strip()}\" | perl B-Moses_per_line.perl -lc \"{gen_line.strip()}\""
                     moses_output = run_and_capture(moses_command)
                     
                     norm_command = f"python B-Norm_per_line.py --refs \"{label_line.strip()}\" --gen \"{gen_line.strip()}\""
-
-                    # Run the command and capture the output
                     norm_output = run_and_capture(norm_command)
-                    
+
                     nltk_command = f"python B-NLTK_per_line.py --ref \"{label_line.strip()}\" --gen \"{gen_line.strip()}\""
                     nltk_output = run_and_capture(nltk_command)
                     
