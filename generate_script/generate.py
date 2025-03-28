@@ -3,20 +3,21 @@ import json
 import os
 import time
 
-from datasets import load_dataset, load_from_disk
+from datasets import load_from_disk
 from ollama import Client
 
 # ds = load_dataset("Maxscha/commitbench", split="test", streaming=True)
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
 SEED = 42
+ROW_COUNT = 20000
 
 client = Client(
     host="http://localhost:11434",
 )
 
 
-def call_ollama_model(model: str, prompt: str, temp: float) -> str:
+def call_ollama_model(model: str, prompt: str, temp: float):
     try:
         response = client.chat(
             model=model,
@@ -28,7 +29,7 @@ def call_ollama_model(model: str, prompt: str, temp: float) -> str:
         return True, parsed_response["message"]
     except:
         print("err: cannot parse empty json response", flush=True)
-        return False, "err: empty json response"
+        return False, ""
 
 
 def main():
@@ -67,13 +68,15 @@ def main():
 
     ds = load_from_disk(f"./commitbench_{lang}")
 
-    row_count = 0
+    row_counter = 0
     with open(filename, "w", encoding="utf-8") as op, open(
         filename_log, "w", encoding="utf-8"
     ) as log, open(label_filename, "w", encoding="utf-8") as label:
+        log.write("id,hash,original_msg,generated_msg,project\n")
+        
         for i, data in enumerate(ds):
             if data["diff_languages"] == lang:
-                print(f"commit_hash: {data["hash"]}", flush=True)
+                print(f"model: {model_name} | lang: {lang} | temp: {temperature} | commit_hash: {data["hash"]}", flush=True)
                 diff = data["diff"]
                 prompt = f"""The following is a diff which describes the code changes in a commit, Your task is to write a short commit message accordingly. {diff} According to the diff, the commit message should be:"""
                 is_success, response = call_ollama_model(
@@ -81,17 +84,24 @@ def main():
                 )
 
                 if is_success:
-                    row_count += 1
-                    op.write(repr(response)[1:-1] + "\n")
-                    label.write(repr(data["message"])[1:-1] + "\n")
+                    ...
+                row_counter += 1
+                op.write(repr(response)[1:-1] + "\n")
+                label.write(repr(data["message"])[1:-1] + "\n")
 
-                log.write(f'{i},"{data["hash"]}","' + repr(response)[1:-1] + f',{data["project"]}'+'"\n')
-                if row_count == 20001:
+                log.write(
+                    f'{i},"{data["hash"]}","'
+                    + repr(data["message"])[1:-1]
+                    + '","'
+                    + repr(response)[1:-1]
+                    + f'","{data["project"]}"'
+                    + '\n'
+                )
+                if row_counter == ROW_COUNT:
                     break
-    print(
-        f"processed {row_count} row(s) for {lang}/{model_name} in {time.time() - start_time} seconds",
-        flush=True,
-    )
+        end_process_str = f"processed {row_counter} row(s) for {lang}/{model_name} in {time.time() - start_time} seconds"
+        log.write(end_process_str + ",,,\n")
+        print(end_process_str, flush=True)
 
 
 if __name__ == "__main__":
