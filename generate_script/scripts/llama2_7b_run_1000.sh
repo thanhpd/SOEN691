@@ -1,0 +1,39 @@
+# llama2:7b -> temp 0
+echo "Running llama2:7b for py with temp=0.0\n"
+python generate.py --model=llama2:7b --lang=py --temp=0.0
+echo "Completed run-> llama2:7b for py with temp=0.0\n"
+
+echo "Running llama2:7b for java with temp=0.0\n"
+python generate.py --model=llama2:7b --lang=java --temp=0.0
+echo "Completed run-> llama2:7b for java with temp=0.0\n"
+
+echo "Running llama2:7b for js with temp=0.0\n"
+python generate.py --model=llama2:7b --lang=js --temp=0.0
+echo "Completed run-> llama2:7b for js with temp=0.0\n"
+
+# llama2:7b -> temp 0.5
+echo "Running llama2:7b for py with temp=0.5\n"
+python generate.py --model=llama2:7b --lang=py --temp=0.5
+echo "Completed run-> llama2:7b for py with temp=0.5\n"
+
+echo "Running llama2:7b for java with temp=0.5\n"
+python generate.py --model=llama2:7b --lang=java --temp=0.5
+echo "Completed run-> llama2:7b for java with temp=0.5\n"
+
+echo "Running llama2:7b for js with temp=0.5\n"
+python generate.py --model=llama2:7b --lang=js --temp=0.5
+echo "Completed run-> llama2:7b for js with temp=0.5\n"
+
+# llama2:7b -> temp 1
+echo "Running llama2:7b for py with temp=1.0\n"
+python generate.py --model=llama2:7b --lang=py --temp=1.0
+echo "Completed run-> llama2:7b for py with temp=1.0\n"
+
+echo "Running llama2:7b for java with temp=1.0\n"
+python generate.py --model=llama2:7b --lang=java --temp=1.0
+echo "Completed run-> llama2:7b for java with temp=1.0\n"
+
+echo "Running llama2:7b for js with temp=1.0\n"
+python generate.py --model=llama2:7b --lang=js --temp=1.0
+echo "Completed run-> llama2:7b for js with temp=1.0\n"
+
