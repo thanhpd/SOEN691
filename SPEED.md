@@ -83,7 +83,7 @@ Make this file executable:
 chmod +x speed-exec.sh
 ```
 
-Ref: https://github.com/thanhpd/SOEN691/blob/dev/thanh/speed-exec.sh
+Ref: https://github.com/thanhpd/SOEN691/blob/main/speed-exec.sh
 
 - Clone the folder as many times as you needed for the job execution. For example:
 ```sh
@@ -104,7 +104,7 @@ rsync -av ./ ph_thanh@speed.encs.concordia.ca:/speed-scratch/ph_thanh/SOEN691/su
 ## 2. Run the script
 - Optional: Go into each cloned folder > rename the job name so you can track the job in case it failed (you can also track it by the job id)
 
-## 2.1. Submit the non-interactive jobs
+### 2.1. Submit the non-interactive jobs
 Make sure you're not submitting the job inside the interactive job. Best way is to disconnect and reconnect again:
 ```
 # In each code folder, run:
@@ -114,5 +114,5 @@ sbatch -p ps ./speed-exec.sh -A soen691w25
 You'll receive notifications when the status of the job changes (started, completed, failed)
 The execution output is stored in slurm-<jobid>.out of each folder
 
-## 2.2. Job management commands
+### 2.2. Job management commands
 See: https://nag-devops.github.io/speed-hpc/#common-job-management-commands
