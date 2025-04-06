@@ -183,3 +183,5 @@ measure_script/output.csv
 measure_script/tmp_ref.txt
 measure_script/output.csv
 measure_script/output_bert_per_line.csv
+
+replication/nngen/nngen/
