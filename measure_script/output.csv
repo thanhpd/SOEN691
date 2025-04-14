@@ -1,5 +1,0 @@
-Foldername,B-Moses,B-Norm,B-NLTK,Rouge-L,METEOR
-processed_msg/1000 rows/js/test,,,,,
-processed_msg/1000 rows/js/llama2_7b/1.0,,,,,
-processed_msg/1000 rows/js/llama2_7b/0.5,,,,,
-processed_msg/1000 rows/js/llama2_7b/0.0,,,,,
