@@ -38,6 +38,10 @@ pip install bert-score
 python bertscore_per_line.py
 ```
 
+## Optimize the time for running evaluation measurement
+- The BERTScore script will use all the CPU cores available to the machine, so more cores will decrease the time.
+- The scripts for remaining metrics only run on single thread, so it is recommended to clone this repository and run with different dataset at the same time on a multi-core machine. Our project used the solution provided by SPEED cluster at Concordia ENCS, the details are provided [here](/SPEED.md).
+
 ## Reference
 - BLEU, ROUGE-L metric evaluation scripts comes from https://github.com/DeepSoftwareAnalytics/CommitMsgEmpirical
 - METEOR metric evaluation script comes from https://github.com/facebookresearch/vizseq/blob/main/vizseq/scorers/meteor.py

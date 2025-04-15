@@ -24,7 +24,13 @@ Usage demo about the metrics can be found [here](measure_script/README.md).
 See RQ1 results here.
 
 ## RQ2: What is the impact of different temperature settings on the performance of LLMs commit message generation?
-See RQ2 results here.
+See RQ2 results [here](data/temperature_rq2/evaluation/best_results.csv).
 
 ## RQ3: How does the performance of smaller OLLMs compare in generating commit messages across different programming languages?
 See RQ3 results here.
+
+# Repository structure
+- [`replication`](/replication) folder contains the code for RQ1
+- [`generate_script`](/generate_script) folder contains the code for generating Git commit messages used in RQ2 and RQ3
+- [`measure_script`](/measure_script) folder contains the code for getting the quantitative measurements of data, used in all 3 RQs
+- [`data`](/data) folder contains all the data sources, generated outputs, and evaluation results of all RQs
