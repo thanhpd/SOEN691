@@ -20,8 +20,10 @@ conda init --all
 cd SOEN691/generate_script
 pip install -r requirements.txt
 
-# 5. Download the modified CommitBench subset and extract the file to the `generate_script` folder
-# https://zenodo.org/records/15220466
+# 5. Copy the modified CommitBench subset to the `generate_script` folder
+cp -r ../data/temperature_rq2/data_source/commitbench_java ./commitbench_java
+cp -r ../data/temperature_rq2/data_source/commitbench_js ./commitbench_js
+cp -r ../data/temperature_rq2/data_source/commitbench_py ./commitbench_py
 
 # 6. Run Ollama model
 ollama run gemma2
@@ -30,11 +32,11 @@ ollama run gemma2
 python generate.py --model=gemma2 --lang=py --temp=0.5
 ```
 
-# Running the python script (for single LLM)
+## Running the python script (for single LLM)
 ```python
 $ python generate.py --m=<model_name> --l=<programming_language> --t=<temperature>
 $ python generate.py --m=llama3.2:3b --l=py --t=0.5 # example
 (or)
 $ python generate.py --model=llama3.2:3b --lang=py --temperature=0.5
 ```
-accepted programming languages: py, go, js, rb, php, java
+accepted programming languages: py, js, java

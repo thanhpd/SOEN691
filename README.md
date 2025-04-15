@@ -29,7 +29,7 @@ See RQ2 results [here](data/temperature_rq2/evaluation/output.csv).
 ### RQ3: How does the performance of smaller OLLMs compare in generating commit messages across different programming languages?
 See RQ3 results [here](data/language_rq3//evaluation).
 
-## Repository structure
+## Repository Structure
 - [`replication`](/replication) folder contains the code for RQ1
 - [`generate_script`](/generate_script) folder contains the code for generating Git commit messages used in RQ2 and RQ3
 - [`measure_script`](/measure_script) folder contains the code for getting the quantitative measurements of data, used in all 3 RQs
