@@ -1,0 +1,25 @@
+import csv
+
+with open("./output_lines-nltk.csv", "r") as file, open(
+    "output_lines-nltk_java.csv", "w"
+) as o_java, open("output_lines-nltk_js.csv", "w") as o_js, open(
+    "output_lines-nltk_py.csv", "w"
+) as o_py:
+    csvreader = csv.reader(file)
+    for row in csvreader:
+        if row[0] == "Foldername":
+            o_java.write("ModelName,Line Number,B-Moses,B-Norm,B-NLTK,Rouge-L,METEOR" + "\n")
+            o_js.write("ModelName,Line Number,B-Moses,B-Norm,B-NLTK,Rouge-L,METEOR" + "\n")
+            o_py.write("ModelName,Line Number,B-Moses,B-Norm,B-NLTK,Rouge-L,METEOR" + "\n")
+            continue
+        
+        path = row[0].split("/")
+        lang = path[2]
+        model = path[3]
+        
+        if lang == "java":
+            o_java.write(f"{model},{row[1]},{row[2]},{row[3]},{row[4]},{row[5]},{row[6]}" + "\n")
+        elif lang == "js":
+            o_js.write(f"{model},{row[1]},{row[2]},{row[3]},{row[4]},{row[5]},{row[6]}" + "\n")
+        elif lang == "py":
+            o_py.write(f"{model},{row[1]},{row[2]},{row[3]},{row[4]},{row[5]},{row[6]}" + "\n")
