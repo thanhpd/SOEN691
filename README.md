@@ -34,3 +34,13 @@ See RQ3 results here.
 - [`generate_script`](/generate_script) folder contains the code for generating Git commit messages used in RQ2 and RQ3
 - [`measure_script`](/measure_script) folder contains the code for getting the quantitative measurements of data, used in all 3 RQs
 - [`data`](/data) folder contains all the data sources, generated outputs, and evaluation results of all RQs
+
+[CommitGen]: https://sjiang1.github.io/commitgen/ "S. Jiang, A. Armaly, and C. McMillan, “Automatically generating commit messages from diffs using neural machine translation,” in ASE, 2017."
+
+[NMT]: https://github.com/epochx/commitgen "P. Loyola, E. Marrese-Taylor, and Y. Matsuo, “A neural architecture for generating natural language descriptions from source code changes,” in ACL. Association for Computational Linguistics, 2017, pp. 287–292."
+
+[CoDiSum]: https://github.com/SoftWiser-group/CoDiSum "S. Xu, Y. Yao, F. Xu, T. Gu, H. Tong, and J. Lu, “Commit message generation for source code changes,” in IJCAI. ijcai.org, 2019, pp. 3975–3981."
+
+[PtrGNCMsg]: https://zenodo.org/record/2542706#.XECK8C277BJ "Q. Liu, Z. Liu, H. Zhu, H. Fan, B. Du, and Y. Qian, “Generating commit messages from diffs using pointer-generator network,” in MSR. IEEE / ACM, 2019, pp. 299–309."
+
+[NNGen]: https://github.com/Tbabm/nngen "Z. Liu, X. Xia, A. E. Hassan, D. Lo, Z. Xing, and X. Wang, “Neuralmachine-translation-based commit message generation: how far are we?” in ASE. ACM, 2018, pp. 373–384."
