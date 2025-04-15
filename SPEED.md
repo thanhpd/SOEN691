@@ -1,4 +1,4 @@
-# Start the metric collection process on the Speed cluster
+# Start the metric collection process on the Concordia SPEED cluster
 
 References:
 - https://github.com/NAG-DevOps/speed-hpc
@@ -92,14 +92,14 @@ cp -r SOEN691 perline1
 cp -r SOEN691 perline10
 ```
 
-- Go into each folder and upload the TOKENIZED dataset for each job using SCP/RSYNC (alternatively, you can upload the whole dataset before cloning the folder and then go into each folder and delete the files you don't need. I use the latter solution so I can keep the folder structure intact)
+- Go into each folder and upload the dataset for each job using SCP/RSYNC (alternatively, you can upload the whole dataset before cloning the folder and then go into each folder and delete the files you don't need. I use the latter solution so I can keep the folder structure intact)
 The file destination should be: `<code_folder_root>/measure_script/processed_msg`
-See more about the evaluation process here: https://github.com/thanhpd/SOEN691/blob/dev/thanh/measure_script/How%20to%20measure.txt
-  
+See more about the evaluation process [here](/measure_script/README.md)
+
 ```
 # Example using RSYNC to copy both folder and files from the current folder on local to the Speed cluster
 rsync -av ./ ph_thanh@speed.encs.concordia.ca:/speed-scratch/ph_thanh/SOEN691/summary_without_empty/measure_script/processed_msg/20000_op_filtered
-``` 
+```
 
 ## 2. Run the script
 - Optional: Go into each cloned folder > rename the job name so you can track the job in case it failed (you can also track it by the job id)
@@ -112,7 +112,7 @@ sbatch -p ps ./speed-exec.sh -A soen691w25
 ```
 
 You'll receive notifications when the status of the job changes (started, completed, failed)
-The execution output is stored in slurm-<jobid>.out of each folder
+The execution output is stored in `slurm-<jobid>.out` file of each folder
 
 ### 2.2. Job management commands
 See: https://nag-devops.github.io/speed-hpc/#common-job-management-commands

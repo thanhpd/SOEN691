@@ -46,3 +46,6 @@ python bertscore_per_line.py
 - BLEU, ROUGE-L metric evaluation scripts comes from https://github.com/DeepSoftwareAnalytics/CommitMsgEmpirical
 - METEOR metric evaluation script comes from https://github.com/facebookresearch/vizseq/blob/main/vizseq/scorers/meteor.py
 - BERTScore metric evaluation script: https://huggingface.co/spaces/evaluate-metric/bertscore
+- The tokenizer scripts come from the paper: [CommitGen(CmtGen)][CommitGen]
+
+[CommitGen]: https://sjiang1.github.io/commitgen/ "S. Jiang, A. Armaly, and C. McMillan, “Automatically generating commit messages from diffs using neural machine translation,” in ASE, 2017."
