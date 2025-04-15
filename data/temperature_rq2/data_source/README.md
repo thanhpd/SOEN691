@@ -1,6 +1,6 @@
 # CommitBench subset
 
-Our filtered CommitBench dataset is available at [HuggingFace](https://huggingface.co/datasets/wizcod/commitbench_subset/tree/main)
+Our filtered CommitBench dataset is available at [Zenodo](https://zenodo.org/records/15220466)
 
 ## Information
 

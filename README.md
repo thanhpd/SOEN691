@@ -7,7 +7,7 @@ This is the replication package for our work in the course SOEN 691: Generative 
 
 # Experimental Datasets
 - Existing dataset: [Using Large Language Models for Commit Message Generation: A Preliminary Study](https://zenodo.org/records/10491384)
-- Modified and filtered [CommitBench dataset](https://github.com/Maxscha/commitbench): Available on [HuggingFace](https://huggingface.co/datasets/wizcod/commitbench_subset/tree/main)
+- Modified and filtered [CommitBench dataset](https://github.com/Maxscha/commitbench): Available on [Zenodo](https://zenodo.org/records/15220466)
 
 # Evaluation Metrics
 - [B-Moses](measure_script/B-Moses.perl)
