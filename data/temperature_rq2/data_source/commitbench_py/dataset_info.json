@@ -1,0 +1,83 @@
+{
+  "builder_name": "csv",
+  "citation": "",
+  "config_name": "default",
+  "dataset_name": "commitbench",
+  "dataset_size": 1522016547,
+  "description": "",
+  "download_checksums": {
+    "hf://datasets/Maxscha/commitbench@1500792cd6998308da046ba72b688156b2ffa471/train.csv": {
+      "num_bytes": 1051789145,
+      "checksum": null
+    },
+    "hf://datasets/Maxscha/commitbench@1500792cd6998308da046ba72b688156b2ffa471/val.csv": {
+      "num_bytes": 225145769,
+      "checksum": null
+    },
+    "hf://datasets/Maxscha/commitbench@1500792cd6998308da046ba72b688156b2ffa471/test.csv": {
+      "num_bytes": 225048896,
+      "checksum": null
+    }
+  },
+  "download_size": 1501983810,
+  "features": {
+    "hash": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "diff": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "message": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "project": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "split": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "diff_languages": {
+      "dtype": "string",
+      "_type": "Value"
+    }
+  },
+  "homepage": "",
+  "license": "",
+  "size_in_bytes": 3024000357,
+  "splits": {
+    "train": {
+      "name": "train",
+      "num_bytes": 1065813031,
+      "num_examples": 1165213,
+      "shard_lengths": [
+        550000,
+        550000,
+        65213
+      ],
+      "dataset_name": "commitbench"
+    },
+    "validation": {
+      "name": "validation",
+      "num_bytes": 228150829,
+      "num_examples": 249689,
+      "dataset_name": "commitbench"
+    },
+    "test": {
+      "name": "test",
+      "num_bytes": 228052687,
+      "num_examples": 249688,
+      "dataset_name": "commitbench"
+    }
+  },
+  "version": {
+    "version_str": "0.0.0",
+    "major": 0,
+    "minor": 0,
+    "patch": 0
+  }
+}
