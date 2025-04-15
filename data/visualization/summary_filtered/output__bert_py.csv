@@ -1,0 +1,6 @@
+ModelName,BERTScore Precision (Mean),BERTScore Recall (Mean),BERTScore F1 (Mean)
+codellama_7b,0.86,0.85,0.86
+gemma2_9b,0.87,0.85,0.86
+llama2_70b,0.86,0.85,0.86
+llama2_7b,0.86,0.85,0.85
+llama3.2_3b,0.87,0.85,0.86

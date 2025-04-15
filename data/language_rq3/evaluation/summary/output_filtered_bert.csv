@@ -1,0 +1,16 @@
+Foldername,BERTScore Precision (Mean),BERTScore Recall (Mean),BERTScore F1 (Mean)
+generated_msg/20000_op_filtered/java/codellama_7b/0.0,0.86,0.85,0.85
+generated_msg/20000_op_filtered/java/gemma2_9b/0.0,0.87,0.85,0.86
+generated_msg/20000_op_filtered/java/llama2_70b/0.0,0.86,0.85,0.86
+generated_msg/20000_op_filtered/java/llama2_7b/0.0,0.86,0.85,0.85
+generated_msg/20000_op_filtered/java/llama3.2_3b/0.0,0.86,0.85,0.86
+generated_msg/20000_op_filtered/js/codellama_7b/0.0,0.86,0.85,0.86
+generated_msg/20000_op_filtered/js/gemma2_9b/0.0,0.87,0.85,0.86
+generated_msg/20000_op_filtered/js/llama2_70b/0.0,0.86,0.85,0.86
+generated_msg/20000_op_filtered/js/llama2_7b/0.0,0.86,0.85,0.85
+generated_msg/20000_op_filtered/js/llama3.2_3b/0.0,0.87,0.85,0.86
+generated_msg/20000_op_filtered/py/codellama_7b/0.0,0.86,0.85,0.86
+generated_msg/20000_op_filtered/py/gemma2_9b/0.0,0.87,0.85,0.86
+generated_msg/20000_op_filtered/py/llama2_70b/0.0,0.86,0.85,0.86
+generated_msg/20000_op_filtered/py/llama2_7b/0.0,0.86,0.85,0.85
+generated_msg/20000_op_filtered/py/llama3.2_3b/0.0,0.87,0.85,0.86

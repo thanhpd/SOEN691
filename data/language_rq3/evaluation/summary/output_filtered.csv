@@ -1,0 +1,16 @@
+Foldername,B-Moses,B-Norm,B-NLTK,Rouge-L,METEOR
+processed_msg/20000_op_filtered/java/codellama_7b/0.0,1.30,6.21,5.33,0.127,0.12
+processed_msg/20000_op_filtered/java/gemma2_9b/0.0,1.01,7.27,4.69,0.149,0.12
+processed_msg/20000_op_filtered/java/llama2_70b/0.0,1.23,6.78,5.09,0.137,0.11
+processed_msg/20000_op_filtered/java/llama2_7b/0.0,0.66,5.82,3.62,0.116,0.08
+processed_msg/20000_op_filtered/java/llama3.2_3b/0.0,0.69,6.50,4.20,0.133,0.10
+processed_msg/20000_op_filtered/js/codellama_7b/0.0,1.07,7.04,5.10,0.139,0.11
+processed_msg/20000_op_filtered/js/gemma2_9b/0.0,0.90,8.30,4.69,0.165,0.12
+processed_msg/20000_op_filtered/js/llama2_70b/0.0,1.26,7.71,5.30,0.151,0.12
+processed_msg/20000_op_filtered/js/llama2_7b/0.0,0.81,6.86,3.99,0.129,0.09
+processed_msg/20000_op_filtered/js/llama3.2_3b/0.0,0.71,7.55,4.48,0.147,0.11
+processed_msg/20000_op_filtered/py/codellama_7b/0.0,1.82,7.61,5.82,0.15,0.13
+processed_msg/20000_op_filtered/py/gemma2_9b/0.0,1.81,9.15,5.74,0.18,0.14
+processed_msg/20000_op_filtered/py/llama2_70b/0.0,2.66,8.44,6.78,0.166,0.15
+processed_msg/20000_op_filtered/py/llama2_7b/0.0,1.26,7.52,4.69,0.143,0.10
+processed_msg/20000_op_filtered/py/llama3.2_3b/0.0,1.46,8.20,5.35,0.157,0.12

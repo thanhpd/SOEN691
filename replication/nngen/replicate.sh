@@ -24,7 +24,7 @@ echo "Evaluate the results: BLEU = 16.42, 27.6/16.8/13.4/11.8"
 cd ..
 echo "Extract diffs from the data provided by original study"
 mkdir -p ../data
-python extract_diff.py --input=../../data/paper/all_result.json --output=./nngen/data/paper_extracted_diffs.diff --labelin=../../data/paper/msg/label.msg --labelout=./nngen/data/paper_extracted_diffs.msg
+python extract_diff.py --input=../../data/replication_rq1/data_source/all_result.json --output=./nngen/data/paper_extracted_diffs.diff --labelin=../../data/replication_rq1/data_source/msg/label.msg --labelout=./nngen/data/paper_extracted_diffs.msg
 cd nngen
 
 # Run the docker image on the original study

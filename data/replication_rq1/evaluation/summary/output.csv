@@ -1,0 +1,4 @@
+Foldername,B-Moses,B-Norm,B-NLTK,Rouge-L,METEOR
+replication/nngen,1.32,5.50,2.85,0.049,N/A
+replication/llama2,1.49,8.23,4.43,0.122,0.11
+replication/llama2_70b,1.73,9.03,6.35,0.149,0.16
