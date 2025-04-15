@@ -24,10 +24,10 @@ Usage demo about the metrics can be found [here](measure_script/README.md).
 See RQ1 results here.
 
 ### RQ2: What is the impact of different temperature settings on the performance of LLMs commit message generation?
-See RQ2 results [here](https://github.com/thanhpd/SOEN691/blob/main/data/temperature_rq2/evaluation/output.csv).
+See RQ2 results [here](data/temperature_rq2/evaluation/output.csv).
 
 ### RQ3: How does the performance of smaller OLLMs compare in generating commit messages across different programming languages?
-See RQ3 results here.
+See RQ3 results [here](data/language_rq3//evaluation).
 
 ## Repository structure
 - [`replication`](/replication) folder contains the code for RQ1
