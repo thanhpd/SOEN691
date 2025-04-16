@@ -1,4 +1,6 @@
 Foldername,B-Moses,B-Norm,B-NLTK,Rouge-L,METEOR
-replication/nngen,1.32,5.50,2.85,0.049,N/A
-replication/llama2,1.49,8.23,4.43,0.122,0.11
-replication/llama2_70b,1.73,9.03,6.35,0.149,0.16
+processed_msg/formatted/paper_llama2_70b,1.66,8.68,7.08,0.15,0.17
+processed_msg/formatted/llama2_70b,1.73,9.03,6.35,0.149,0.16
+processed_msg/formatted/paper_llama2_7b,1.33,8.10,5.71,0.119,0.13
+processed_msg/formatted/llama2_7b,1.49,8.23,4.43,0.122,0.11
+processed_msg/formatted/nngen,1.32,5.50,2.85,0.049,0.05
