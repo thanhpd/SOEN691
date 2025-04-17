@@ -1,0 +1,11 @@
+Foldername,BERTScore Precision (Mean),BERTScore Recall (Mean),BERTScore F1 (Mean)
+generated_msg/formatted/llama2,0.86,0.87,0.86
+generated_msg/formatted/llama2_70b,0.86,0.88,0.87
+generated_msg/formatted/nngen,0.84,0.83,0.84
+generated_msg/formatted/paper_llama2_70b,0.84,0.85,0.84
+generated_msg/formatted/paper_llama2_7b,0.84,0.85,0.85
+generated_msg/formatted/paper_ptrgncmsg,0.86,0.85,0.85
+generated_msg/formatted/paper_nmt,0.84,0.83,0.84
+generated_msg/formatted/paper_nngen,0.85,0.85,0.85
+generated_msg/formatted/paper_chatgpt,0.84,0.85,0.85
+generated_msg/formatted/paper_commitgen,0.85,0.84,0.85
