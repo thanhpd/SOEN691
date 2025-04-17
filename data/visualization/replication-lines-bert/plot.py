@@ -9,7 +9,6 @@ def plot_bert_score_boxplot(csv_file, lang):
     # Create the boxplot
     plt.figure(figsize=(10, 6))
     sns.boxplot(x='ModelName', y='BERTScore F1', data=df)
-    # plt.xticks(rotation=45)
     plt.title(f"Box Plot of BERTScore F1 by Model ({lang})")
     plt.xlabel("Model Name")
     plt.ylabel("BERTScore F1")
@@ -25,7 +24,6 @@ def plot_bmoses_boxplot(csv_file, lang):
     # Create the boxplot
     plt.figure(figsize=(10, 6))
     sns.boxplot(x='ModelName', y='B-Moses', data=df)
-    # plt.xticks(rotation=45)
     plt.title(f"Box Plot of B-Moses by Model ({lang})")
     plt.xlabel("Model Name")
     plt.ylabel("B-Moses")
@@ -41,7 +39,6 @@ def plot_bnltk_boxplot(csv_file, lang):
     # Create the boxplot
     plt.figure(figsize=(10, 6))
     sns.boxplot(x='ModelName', y='B-NLTK', data=df)
-    # plt.xticks(rotation=45)
     plt.title(f"Box Plot of B-NLTK by Model ({lang})")
     plt.xlabel("Model Name")
     plt.ylabel("B-NLTK")
@@ -57,7 +54,6 @@ def plot_bnorm_boxplot(csv_file, lang):
     # Create the boxplot
     plt.figure(figsize=(10, 6))
     sns.boxplot(x='ModelName', y='B-Norm', data=df)
-    # plt.xticks(rotation=45)
     plt.title(f"Box Plot of B-Norm by Model ({lang})")
     plt.xlabel("Model Name")
     plt.ylabel("B-Norm")
@@ -73,7 +69,6 @@ def plot_rougel_boxplot(csv_file, lang):
     # Create the boxplot
     plt.figure(figsize=(10, 6))
     sns.boxplot(x='ModelName', y='Rouge-L', data=df)
-    # plt.xticks(rotation=45)
     plt.title(f"Box Plot of Rouge-L by Model ({lang})")
     plt.xlabel("Model Name")
     plt.ylabel("Rouge-L")
@@ -89,7 +84,6 @@ def plot_meteor_boxplot(csv_file, lang):
     # Create the boxplot
     plt.figure(figsize=(10, 6))
     sns.boxplot(x='ModelName', y='METEOR', data=df)
-    # plt.xticks(rotation=45)
     plt.title(f"Box Plot of METEOR by Model ({lang})")
     plt.xlabel("Model Name")
     plt.ylabel("METEOR")
@@ -98,25 +92,4 @@ def plot_meteor_boxplot(csv_file, lang):
     # Show the plot
     plt.show()
 
-plot_bmoses_boxplot("./replication-lines/output_lines_java.csv", "java")
-# plot_bnorm_boxplot("./replication-lines/output_lines_java.csv", "java")
-# plot_bnltk_boxplot("./replication-lines/output_lines_java.csv", "java")
-# plot_rougel_boxplot("./replication-lines/output_lines_java.csv", "java")
-# plot_meteor_boxplot("./replication-lines/output_lines_java.csv", "java")
-# plot_bert_score_boxplot("./replication-lines-bert/output_lines_java.csv", "java")
-
-# plot_bert_score_boxplot("/content/data/output_bert_per_line_java.csv", "java")
-# plot_bert_score_boxplot("/content/data/output_bert_per_line_js.csv", "js")
-# plot_bert_score_boxplot("/content/data/output_bert_per_line_py.csv", "py")
-
-# plot_bmoses_boxplot("./output-lines/output_lines-moses_java.csv", "java")
-# plot_bmoses_boxplot("./output-lines/output_lines-moses_js.csv", "js")
-# plot_bmoses_boxplot("./output-lines/output_lines-moses_py.csv", "py")
-
-# plot_bnltk_boxplot("/content/data/output_lines-nltk_java.csv", "java")
-# plot_bnltk_boxplot("/content/data/output_lines-nltk_js.csv", "js")
-# plot_bnltk_boxplot("/content/data/output_lines-nltk_py.csv", "py")
-
-# plot_bnorm_boxplot("/content/data/output_lines-norm_java.csv", "java")
-# plot_bnorm_boxplot("/content/data/output_lines-norm_js.csv", "js")
-# plot_bnorm_boxplot("/content/data/output_lines-norm_py.csv", "py")
+plot_bert_score_boxplot("output_bert_java.csv", "java")
