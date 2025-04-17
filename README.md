@@ -21,7 +21,7 @@ Usage demo about the metrics can be found [here](measure_script/README.md).
 
 ## Research Questions
 ### RQ1: How replicable are the quantitative results of the study "Using Large Language Models for Commit Message Generation: A Preliminary Study"?
-See RQ1 results here.
+See RQ1 results [here](data/replication_rq1/evaluation).
 
 ### RQ2: What is the impact of different temperature settings on the performance of LLMs commit message generation?
 See RQ2 results [here](data/temperature_rq2/evaluation/output.csv).
